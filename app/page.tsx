@@ -14,6 +14,6 @@ export default function Home() {
     storeUser();
   }, [store]);
   return <main>
-    
+    Home
   </main>;
 }

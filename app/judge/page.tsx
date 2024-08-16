@@ -1,8 +1,9 @@
 import React from 'react'
+import CreateCompetition from './_components/create-competition'
 
 const JudgePage = () => {
   return (
-    <div>JudgePage</div>
+    <div><CreateCompetition /></div>
   )
 }
 
