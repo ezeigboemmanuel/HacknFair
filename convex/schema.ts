@@ -13,5 +13,7 @@ export default defineSchema({
     title: v.string(),
     subtitle: v.string(),
     imageUrl: v.string(),
+    storageId: v.id("_storage"),
+    format: v.string(),
   }),
 });

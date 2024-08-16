@@ -40,18 +40,18 @@ const formSchema = z.object({
 
 const CreateCompetition = () => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const imageInput = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
 
   const storeFair = useMutation(api.fair.storeFair);
 
+  const generateUploadUrl = useMutation(api.fair.generateUploadUrl);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedImages(Array.from(e.target.files || []));
     const file = e.target.files?.[0];
     if (file) {
-      setImage(file);
       setImageUrl(URL.createObjectURL(file));
     }
   };
@@ -59,16 +59,40 @@ const CreateCompetition = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const postUrl = await generateUploadUrl();
+
     if (!title || !subtitle || !imageUrl) {
       alert("Please fill out all fields");
       return;
     }
 
-    await storeFair({
-      title,
-      subtitle,
-      imageUrl,
-    });
+    await Promise.all(
+      selectedImages.map(async (image) => {
+        const result = await fetch(postUrl, {
+          method: "POST",
+          headers: { "Content-Type": image.type },
+          body: image,
+        });
+
+        const json = await result.json();
+
+        if (!result.ok) {
+          throw new Error(`Upload failed: ${JSON.stringify(json)}`);
+        }
+        const { storageId } = json;
+        // Step 3: Save the newly allocated storage id to the database
+        await storeFair({
+          title,
+          subtitle,
+          imageUrl,
+          storageId,
+          format: "image",
+        }).catch((error) => {
+          console.log(error);
+          alert("Maximum 5 files reached.");
+        });
+      })
+    );
 
     alert("Banner submitted successfully!");
   };
@@ -79,11 +103,13 @@ const CreateCompetition = () => {
     >
       <div className="mb-4">
         <label className="block text-gray-700">Banner Image</label>
-        <input
+        <Input
+          id="image"
           type="file"
           accept="image/*"
           onChange={handleImageChange}
-          className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring"
+          className="cursor-pointer w-fit bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200 hover:border-zinc-400 focus:border-zinc-400 focus:bg-zinc-200"
+          disabled={selectedImages.length !== 0}
         />
         {imageUrl && (
           <img
