@@ -12,8 +12,16 @@ export default defineSchema({
   fairs: defineTable({
     title: v.string(),
     subtitle: v.string(),
+    deadline: v.optional(v.string()),
+    about: v.string(),
+    requirements: v.optional(v.string()),
+    prices: v.optional(v.string()),
+    judgingCriteria: v.optional(v.string()),
     imageUrl: v.string(),
     storageId: v.id("_storage"),
     format: v.string(),
-  }),
+    judgeId: v.id("users"),
+  })
+  .index("by_title", ["title"])
+  .index("by_subtitle", ["subtitle"]),
 });

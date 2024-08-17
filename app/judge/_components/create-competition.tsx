@@ -1,10 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
+import Image from "next/image";
 import { FormEvent, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -39,10 +51,20 @@ const formSchema = z.object({
 });
 
 const CreateCompetition = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      subtitle: "",
+      about: "",
+      requirements: "",
+      prices: "",
+      judgingCriteria: "",
+    },
+  });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [title, setTitle] = useState("");
-  const [subtitle, setSubtitle] = useState("");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [deadline, setDeadline] = useState("");
 
   const storeFair = useMutation(api.fair.storeFair);
 
@@ -56,15 +78,13 @@ const CreateCompetition = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const postUrl = await generateUploadUrl();
 
-    if (!title || !subtitle || !imageUrl) {
-      alert("Please fill out all fields");
-      return;
-    }
+    // if (!title || !subtitle || !imageUrl) {
+    //   alert("Please fill out all fields");
+    //   return;
+    // }
 
     await Promise.all(
       selectedImages.map(async (image) => {
@@ -82,10 +102,15 @@ const CreateCompetition = () => {
         const { storageId } = json;
         // Step 3: Save the newly allocated storage id to the database
         await storeFair({
-          title,
-          subtitle,
+          title: data.title,
+          subtitle: data.subtitle,
           imageUrl,
           storageId,
+          about: data.about,
+          deadline,
+          requirements: data.requirements,
+          prices: data.prices,
+          judgingCriteria: data.judgingCriteria,
           format: "image",
         }).catch((error) => {
           console.log(error);
@@ -97,56 +122,148 @@ const CreateCompetition = () => {
     alert("Banner submitted successfully!");
   };
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md"
-    >
-      <div className="mb-4">
-        <label className="block text-gray-700">Banner Image</label>
-        <Input
-          id="image"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="cursor-pointer w-fit bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200 hover:border-zinc-400 focus:border-zinc-400 focus:bg-zinc-200"
-          disabled={selectedImages.length !== 0}
-        />
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt="Preview"
-            className="mt-4 rounded-lg max-h-64"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="">
+        <div className="mb-4">
+          <label className="block text-gray-700">Banner Image</label>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="Preview"
+              className="rounded-lg w-full max-h-72 object-cover object-center"
+            />
+          )}
+        </div>
+        <div className="mt-4">
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="cursor-pointer"
           />
-        )}
-      </div>
+        </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700">Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring"
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich Gig title to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700">Subtitle</label>
-        <input
-          type="text"
-          value={subtitle}
-          onChange={(e) => setSubtitle(e.target.value)}
-          className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring"
+        <FormField
+          control={form.control}
+          name="subtitle"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Subtitle</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich Gig subtitle to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <button
-        type="submit"
-        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-      >
-        Submit
-      </button>
-    </form>
+        <div className="mb-4">
+          <label className="block text-gray-700">Date</label>
+          <input
+            type="date"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring"
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="about"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>About</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich about to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="requirements"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Requirements</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich requirement to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="prices"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Prices</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich about to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="judgingCriteria"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Judging Criteria</FormLabel>
+              <FormControl>
+                <Input placeholder="I will do something amazing" {...field} />
+              </FormControl>
+              <FormDescription>
+                Craft a keyword-rich criteria to attract potential buyers.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <button
+          type="submit"
+          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+        >
+          Submit
+        </button>
+      </form>
+    </Form>
   );
 };
 
