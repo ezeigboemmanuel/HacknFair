@@ -47,7 +47,7 @@ export const storeFair = mutation({
 
 export const get = query({
   handler: async (ctx) => {
-    const fairs = await ctx.db.query("fairs").collect();
+    const fairs = await ctx.db.query("fairs").order("desc").collect();
 
     const fairsWithImages = await Promise.all(
       // get images
@@ -70,10 +70,34 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-// export const getImageUrl = query({
-//   args: { storageId: v.optional(v.id("_storage")) },
-//   handler: async (ctx, args) => {
-//     if (!args.storageId) return null;
-//     return await ctx.storage.getUrl(args.storageId);
-//   },
-// });
+export const getSingleFair = query({
+  args: { id: v.id("fairs") },
+  handler: async (ctx, args) => {
+    const fair = await ctx.db.get(args.id);
+
+    if (fair === null) {
+      throw new Error("Fair not found");
+    }
+
+    const singleFair = await ctx.db
+      .query("fairs")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect()
+      
+      const singleFairWithImage = await Promise.all(
+        // get images
+  
+        await Promise.all(
+          singleFair.map(async (item) => {
+            const imageUrl = await ctx.storage.getUrl(item.storageId);
+            if (!imageUrl) {
+              throw new Error("Image not found");
+            }
+            return { ...fair, imageUrl: imageUrl };
+          })
+        )
+      );
+      return singleFairWithImage;
+    return singleFairWithImage;
+  },
+});

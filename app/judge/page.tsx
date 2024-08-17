@@ -1,22 +1,23 @@
 "use client";
 import { useQuery } from "convex/react";
-import CreateCompetition from "./_components/create-competition";
 import { api } from "@/convex/_generated/api";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const JudgePage = () => {
-  const fairs = useQuery(api.fair.get);
+  const fairs = useQuery(api.fairs.get);
 
   return (
     <div>
-      <CreateCompetition />
       {fairs?.map((fair) => (
-        <div key={fair._id}>
-          <img src={fair.imageUrl} />
-          <p>{fair.imageUrl}</p>
-          <p>{fair.title}</p>
-          <p>{fair.subtitle}</p>
-        </div>
+        <Link key={fair._id} href={`/judge/${fair._id}`}>
+          <div>
+            <img src={fair.imageUrl} />
+            <p>{fair.title}</p>
+            <p>{fair.subtitle}</p>
+            <p>{fair.deadline}</p>
+          </div>
+        </Link>
       ))}
     </div>
   );

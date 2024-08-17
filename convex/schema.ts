@@ -23,5 +23,5 @@ export default defineSchema({
     judgeId: v.id("users"),
   })
   .index("by_title", ["title"])
-  .index("by_subtitle", ["subtitle"]),
+  .index("by_subtitle", ["subtitle"])
 });

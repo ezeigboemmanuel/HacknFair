@@ -15,6 +15,7 @@ import { api } from "@/convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -66,9 +67,11 @@ const CreateCompetition = () => {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [deadline, setDeadline] = useState("");
 
-  const storeFair = useMutation(api.fair.storeFair);
+  const router = useRouter();
 
-  const generateUploadUrl = useMutation(api.fair.generateUploadUrl);
+  const storeFair = useMutation(api.fairs.storeFair);
+
+  const generateUploadUrl = useMutation(api.fairs.generateUploadUrl);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedImages(Array.from(e.target.files || []));
@@ -81,10 +84,10 @@ const CreateCompetition = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const postUrl = await generateUploadUrl();
 
-    // if (!title || !subtitle || !imageUrl) {
-    //   alert("Please fill out all fields");
-    //   return;
-    // }
+    if (!imageUrl) {
+      alert("Please input an Image");
+      return;
+    }
 
     await Promise.all(
       selectedImages.map(async (image) => {
@@ -100,7 +103,7 @@ const CreateCompetition = () => {
           throw new Error(`Upload failed: ${JSON.stringify(json)}`);
         }
         const { storageId } = json;
-        // Step 3: Save the newly allocated storage id to the database
+
         await storeFair({
           title: data.title,
           subtitle: data.subtitle,
@@ -114,8 +117,10 @@ const CreateCompetition = () => {
           format: "image",
         }).catch((error) => {
           console.log(error);
-          alert("Maximum 5 files reached.");
+          alert("Create fair error");
         });
+
+        router.push("/judge");
       })
     );
 
@@ -256,12 +261,7 @@ const CreateCompetition = () => {
           )}
         />
 
-        <button
-          type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-        >
-          Submit
-        </button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
