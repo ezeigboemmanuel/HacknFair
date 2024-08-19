@@ -2,15 +2,15 @@
 
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const JudgePage = () => {
-  const router = useRouter();
   const user = useQuery(api.users.getCurrentUser);
-  useEffect(() => {
-    router.push(`/judge/${user?._id}`);
-  }, []);
+  const router = useRouter();
+setTimeout(() => {
+  router.push(`/judge/${user?._id}`);
+}, 4000)
   return <div></div>;
 };
 
