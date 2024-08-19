@@ -13,7 +13,7 @@ const JudgePage = () => {
       <Link href="/judge/create-fair">
         <Button className="m-10">Create fair</Button>
       </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
         {fairs?.map((fair) => (
           <Link key={fair._id} href={`/judge/${fair._id}`}>
             <div className="mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">

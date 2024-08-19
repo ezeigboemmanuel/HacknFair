@@ -149,18 +149,23 @@ const EditCompetition = ({
       })
     );
 
-    alert("Banner submitted successfully!");
+    alert("Fair updated successfully!");
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="mb-4">
-          <label className="block text-gray-700">Banner Image</label>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto"
+      >
+        <div className="mb-6">
+          <label className="block text-gray-800 font-semibold">
+            Banner Image
+          </label>
           {imageUrl && (
             <img
               src={imageUrl}
               alt="Preview"
-              className="rounded-lg w-full max-h-72 object-cover object-center"
+              className="rounded-lg w-full max-h-72 object-cover object-center mt-2 border border-gray-300"
             />
           )}
         </div>
@@ -170,7 +175,7 @@ const EditCompetition = ({
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="cursor-pointer"
+            className="cursor-pointer p-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
           />
         </div>
 
@@ -178,15 +183,21 @@ const EditCompetition = ({
           control={form.control}
           name="title"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
+            <FormItem className="mt-6">
+              <FormLabel className="text-gray-800 font-semibold">
+                Title
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 Enter your title
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
@@ -195,26 +206,32 @@ const EditCompetition = ({
           control={form.control}
           name="subtitle"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Subtitle</FormLabel>
+            <FormItem className="mt-4">
+              <FormLabel className="text-gray-800 font-semibold">
+                Subtitle
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 Enter your subtitle
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Date</label>
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold">Date</label>
           <input
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
-            className="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring"
+            className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
           />
         </div>
 
@@ -222,15 +239,21 @@ const EditCompetition = ({
           control={form.control}
           name="about"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>About</FormLabel>
+            <FormItem className="mt-4">
+              <FormLabel className="text-gray-800 font-semibold">
+                About
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 About the fair.
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
@@ -239,15 +262,21 @@ const EditCompetition = ({
           control={form.control}
           name="requirements"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Requirements</FormLabel>
+            <FormItem className="mt-4">
+              <FormLabel className="text-gray-800 font-semibold">
+                Requirements
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 Enter the requirements.
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
@@ -256,15 +285,21 @@ const EditCompetition = ({
           control={form.control}
           name="prices"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Prices</FormLabel>
+            <FormItem className="mt-4">
+              <FormLabel className="text-gray-800 font-semibold">
+                Prices
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 Enter the prices.
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
@@ -273,20 +308,32 @@ const EditCompetition = ({
           control={form.control}
           name="judgingCriteria"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Judging Criteria</FormLabel>
+            <FormItem className="mt-4">
+              <FormLabel className="text-gray-800 font-semibold">
+                Judging Criteria
+              </FormLabel>
               <FormControl>
-                <Input placeholder="I will do something amazing" {...field} />
+                <Input
+                  placeholder="I will do something amazing"
+                  {...field}
+                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="text-gray-500 mt-1">
                 Enter the judging criteria
               </FormDescription>
-              <FormMessage />
+              <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          variant="default"
+          className="mt-6 w-full py-3 font-semibold rounded-lg"
+        >
+          Edit Fair
+        </Button>
       </form>
     </Form>
   );
