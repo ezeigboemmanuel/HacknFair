@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import Image from "next/image";
@@ -51,21 +52,44 @@ const formSchema = z.object({
   }),
 });
 
-const CreateCompetition = () => {
+interface EditCompetitionProps {
+  title: string;
+  subtitle: string;
+  initialDeadline: string;
+  about: string;
+  requirements: string | undefined;
+  prices: string | undefined;
+  judgingCriteria: string | undefined;
+  imageURL: string;
+  fairId: Id<"fairs">;
+}
+
+const EditCompetition = ({
+  title,
+  subtitle,
+  about,
+  initialDeadline,
+  fairId,
+  imageURL,
+  judgingCriteria,
+  prices,
+  requirements,
+}: EditCompetitionProps) => {
+  const updateFair = useMutation(api.fairs.updateFair);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      subtitle: "",
-      about: "",
-      requirements: "",
-      prices: "",
-      judgingCriteria: "",
+      title,
+      subtitle,
+      about,
+      judgingCriteria,
+      prices,
+      requirements,
     },
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [deadline, setDeadline] = useState("");
+  const [imageUrl, setImageUrl] = useState<string>(imageURL);
+  const [deadline, setDeadline] = useState(initialDeadline);
 
   const router = useRouter();
 
@@ -104,7 +128,8 @@ const CreateCompetition = () => {
         }
         const { storageId } = json;
 
-        await storeFair({
+        await updateFair({
+          id: fairId,
           title: data.title,
           subtitle: data.subtitle,
           imageUrl,
@@ -117,7 +142,7 @@ const CreateCompetition = () => {
           format: "image",
         }).catch((error) => {
           console.log(error);
-          alert("Create fair error");
+          alert("Update fair error");
         });
 
         router.push("/judge");
@@ -220,7 +245,7 @@ const CreateCompetition = () => {
                 <Input placeholder="I will do something amazing" {...field} />
               </FormControl>
               <FormDescription>
-                Enter your requirements
+                Enter the requirements.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -237,7 +262,7 @@ const CreateCompetition = () => {
                 <Input placeholder="I will do something amazing" {...field} />
               </FormControl>
               <FormDescription>
-                Enter the prices
+                Enter the prices.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -267,4 +292,4 @@ const CreateCompetition = () => {
   );
 };
 
-export default CreateCompetition;
+export default EditCompetition;

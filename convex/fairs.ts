@@ -82,22 +82,96 @@ export const getSingleFair = query({
     const singleFair = await ctx.db
       .query("fairs")
       .filter((q) => q.eq(q.field("_id"), args.id))
-      .collect()
-      
-      const singleFairWithImage = await Promise.all(
-        // get images
-  
-        await Promise.all(
-          singleFair.map(async (item) => {
-            const imageUrl = await ctx.storage.getUrl(item.storageId);
-            if (!imageUrl) {
-              throw new Error("Image not found");
-            }
-            return { ...fair, imageUrl: imageUrl };
-          })
-        )
-      );
-      return singleFairWithImage;
+      .collect();
+
+    const singleFairWithImage = await Promise.all(
+      // get images
+
+      await Promise.all(
+        singleFair.map(async (item) => {
+          const imageUrl = await ctx.storage.getUrl(item.storageId);
+          if (!imageUrl) {
+            throw new Error("Image not found");
+          }
+          return { ...fair, imageUrl: imageUrl };
+        })
+      )
+    );
+
     return singleFairWithImage;
   },
 });
+
+export const updateFair = mutation({
+  args: {
+    id: v.id("fairs"),
+    title: v.string(),
+    subtitle: v.string(),
+    deadline: v.string(),
+    about: v.string(),
+    requirements: v.string(),
+    prices: v.string(),
+    judgingCriteria: v.string(),
+    imageUrl: v.string(),
+    storageId: v.id("_storage"),
+    format: v.string(),
+  },
+  handler: async (ctx, args) => {
+
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const title = args.title.trim();
+    const subtitle = args.subtitle.trim();
+    const about = args.about.trim();
+    const requirements = args.requirements.trim();
+    const prices = args.prices.trim();
+    const judgingCriteria = args.judgingCriteria.trim();
+
+    if (!title || !subtitle || !about) {
+      throw new Error("You must fill the required fields");
+    }
+
+    const newfair = ctx.db.patch(args.id, {
+      title: args.title,
+      subtitle: args.subtitle,
+      deadline: args.deadline,
+      about: args.about,
+      requirements: args.requirements,
+      prices: args.prices,
+      judgingCriteria: args.judgingCriteria,
+      format: args.format,
+      storageId: args.storageId,
+      imageUrl: args.imageUrl
+    });
+
+    return newfair;
+  },
+});
+
+export const deleteFair = mutation({
+  args: {id: v.id("fairs")},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+
+    if (user === null) {
+      return;
+    }
+
+    await ctx.db.delete(args.id);
+  }
+})

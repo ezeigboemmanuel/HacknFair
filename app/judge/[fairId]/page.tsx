@@ -3,17 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import { useRouter } from "next/navigation";
 
-const FairPage = ({ params }: { params: { judgeId: string } }) => {
+const FairPage = ({ params }: { params: { fairId: string } }) => {
   const fair = useQuery(api.fairs.getSingleFair, {
-    id: params.judgeId as Id<"fairs">,
+    id: params.fairId as Id<"fairs">,
   });
+
+  const deleteFair = useMutation(api.fairs.deleteFair)
+
+  const onDelete = async () => {
+    deleteFair({ id: params.fairId as Id<"fairs"> });
+    router.back();
+  };
+
+  const router = useRouter();
   return (
     <div>
       <div className="flex space-x-3">
-        <Button>Edit</Button>
-        <Button variant="destructive">Delete</Button>
+        <Button onClick={() => router.push(`/judge/edit-fair/${params.fairId}`)}>Edit</Button>
+        <Button onClick={onDelete} variant="destructive">Delete</Button>
       </div>
 
       {fair?.map((item) => (
