@@ -9,6 +9,7 @@ import Link from "next/link";
 const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
   const fairs = useQuery(api.fairs.getFairsByUser, { id: params.judgeId });
   const user = useQuery(api.users.getCurrentUser);
+
   return (
     <div>
       <Link href={`/judge/${user?._id}/create-fair`}>

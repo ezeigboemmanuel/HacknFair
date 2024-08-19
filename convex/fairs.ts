@@ -88,16 +88,12 @@ export const getFairsByUser = query({
     if (!identity) {
       throw new Error("Unauthorized");
     }
-    const user = await ctx.db
-      .query("users")
-      .filter((q) => q.eq(q.field("_id"), args.id))
+
+    const fairs = await ctx.db
+      .query("fairs")
+      .filter((q) => q.eq(q.field("judgeId"), args.id))
+      .order("desc")
       .collect();
-
-    if (user === null) {
-      return;
-    }
-
-    const fairs = await ctx.db.query("fairs").order("desc").collect();
 
     const fairsWithImages = await Promise.all(
       // get images
