@@ -117,6 +117,38 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 export const getSingleFair = query({
+  args: { id: v.id("fairs") },
+  handler: async (ctx, args) => {
+    const fair = await ctx.db.get(args.id);
+
+    if (fair === null) {
+      throw new Error("Fair not found");
+    }
+
+    const singleFair = await ctx.db
+      .query("fairs")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect();
+
+    const singleFairWithImage = await Promise.all(
+      // get images
+
+      await Promise.all(
+        singleFair.map(async (item) => {
+          const imageUrl = await ctx.storage.getUrl(item.storageId);
+          if (!imageUrl) {
+            throw new Error("Image not found");
+          }
+          return { ...fair, imageUrl: imageUrl };
+        })
+      )
+    );
+
+    return singleFairWithImage;
+  },
+});
+
+export const getSingleFairForJudge = query({
   args: { id: v.id("fairs"), userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const fair = await ctx.db.get(args.id);
@@ -130,9 +162,9 @@ export const getSingleFair = query({
       .filter((q) => q.eq(q.field("_id"), args.id))
       .collect();
 
-      if(singleFair.map((item) => item.judgeId)[0] !== args.userId) {
-        throw new Error("Unauthorised")
-      }
+    if (singleFair.map((item) => item.judgeId)[0] !== args.userId) {
+      throw new Error("Unauthorised");
+    }
 
     const singleFairWithImage = await Promise.all(
       // get images

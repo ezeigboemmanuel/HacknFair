@@ -6,7 +6,7 @@ import { Id } from "@/convex/_generated/dataModel";
 
 const EditPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
-  const fair = useQuery(api.fairs.getSingleFair, {
+  const fair = useQuery(api.fairs.getSingleFairForJudge, {
     id: params.fairId as Id<"fairs">,
     userId: user?._id,
   });

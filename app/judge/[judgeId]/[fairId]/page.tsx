@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 const FairPage = ({ params }: { params: { fairId: string } }) => {
   const user = useQuery(api.users.getCurrentUser);
-  const fair = useQuery(api.fairs.getSingleFair, {
+  const fair = useQuery(api.fairs.getSingleFairForJudge, {
     id: params.fairId as Id<"fairs">,
     userId: user?._id,
   });
@@ -22,7 +22,7 @@ const FairPage = ({ params }: { params: { fairId: string } }) => {
 
   const router = useRouter();
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto px-4">
       <div className="flex space-x-3 mt-5 justify-end">
         <Button
           onClick={() =>
