@@ -7,11 +7,11 @@ import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
 
 const FairPage = ({ params }: { params: { fairId: string } }) => {
+  const user = useQuery(api.users.getCurrentUser);
   const fair = useQuery(api.fairs.getSingleFair, {
     id: params.fairId as Id<"fairs">,
+    userId: user?._id,
   });
-
-  const user = useQuery(api.users.getCurrentUser);
 
   const deleteFair = useMutation(api.fairs.deleteFair);
 
@@ -25,7 +25,9 @@ const FairPage = ({ params }: { params: { fairId: string } }) => {
     <div className="max-w-4xl mx-auto">
       <div className="flex space-x-3 mt-5 justify-end">
         <Button
-          onClick={() => router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)}
+          onClick={() =>
+            router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)
+          }
         >
           Edit
         </Button>
@@ -39,9 +41,7 @@ const FairPage = ({ params }: { params: { fairId: string } }) => {
           <h1 className="font-bold break-normal text-3xl md:text-5xl">
             {item.title}
           </h1>
-          <h3 className="italic text-gray-500">
-            {item.subtitle}
-          </h3>
+          <h3 className="italic text-gray-500">{item.subtitle}</h3>
           <p className="mt-2 mb-2 text-sm">Deadline: {item.deadline}</p>
           <img src={item.imageUrl} />
           <h2 className="my-6 font-semibold text-xl">About</h2>

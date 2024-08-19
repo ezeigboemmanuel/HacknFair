@@ -117,7 +117,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 export const getSingleFair = query({
-  args: { id: v.id("fairs") },
+  args: { id: v.id("fairs"), userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const fair = await ctx.db.get(args.id);
 
@@ -129,6 +129,10 @@ export const getSingleFair = query({
       .query("fairs")
       .filter((q) => q.eq(q.field("_id"), args.id))
       .collect();
+
+      if(singleFair.map((item) => item.judgeId)[0] !== args.userId) {
+        throw new Error("Unauthorised")
+      }
 
     const singleFairWithImage = await Promise.all(
       // get images
