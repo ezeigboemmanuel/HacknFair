@@ -11,6 +11,8 @@ const FairPage = ({ params }: { params: { fairId: string } }) => {
     id: params.fairId as Id<"fairs">,
   });
 
+  const user = useQuery(api.users.getCurrentUser);
+
   const deleteFair = useMutation(api.fairs.deleteFair);
 
   const onDelete = async () => {
@@ -23,7 +25,7 @@ const FairPage = ({ params }: { params: { fairId: string } }) => {
     <div className="max-w-4xl mx-auto">
       <div className="flex space-x-3 mt-5 justify-end">
         <Button
-          onClick={() => router.push(`/judge/edit-fair/${params.fairId}`)}
+          onClick={() => router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)}
         >
           Edit
         </Button>

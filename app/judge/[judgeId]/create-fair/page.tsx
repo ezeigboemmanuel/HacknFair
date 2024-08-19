@@ -1,5 +1,5 @@
 "use client";
-import CreateCompetition from "../_components/create-competition";
+import CreateCompetition from "../../_components/create-competition";
 
 const CreateFairPage = () => {
   return (

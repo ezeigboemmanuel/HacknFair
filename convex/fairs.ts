@@ -47,6 +47,56 @@ export const storeFair = mutation({
 
 export const get = query({
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+
+    if (user === null) {
+      return;
+    }
+
+    const fairs = await ctx.db.query("fairs").order("desc").collect();
+
+    const fairsWithImages = await Promise.all(
+      // get images
+
+      await Promise.all(
+        fairs.map(async (fair) => {
+          const imageUrl = await ctx.storage.getUrl(fair.storageId);
+          if (!imageUrl) {
+            throw new Error("Image not found");
+          }
+          return { ...fair, imageUrl: imageUrl };
+        })
+      )
+    );
+    return fairsWithImages;
+  },
+});
+
+export const getFairsByUser = query({
+  args: { id: v.id("users") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect();
+
+    if (user === null) {
+      return;
+    }
+
     const fairs = await ctx.db.query("fairs").order("desc").collect();
 
     const fairsWithImages = await Promise.all(
@@ -117,11 +167,21 @@ export const updateFair = mutation({
     format: v.string(),
   },
   handler: async (ctx, args) => {
-
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity) {
       throw new Error("Unauthorized");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+
+    if (user === null) {
+      return;
     }
 
     const title = args.title.trim();
@@ -145,7 +205,7 @@ export const updateFair = mutation({
       judgingCriteria: args.judgingCriteria,
       format: args.format,
       storageId: args.storageId,
-      imageUrl: args.imageUrl
+      imageUrl: args.imageUrl,
     });
 
     return newfair;
@@ -153,7 +213,7 @@ export const updateFair = mutation({
 });
 
 export const deleteFair = mutation({
-  args: {id: v.id("fairs")},
+  args: { id: v.id("fairs") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
 
@@ -173,5 +233,5 @@ export const deleteFair = mutation({
     }
 
     await ctx.db.delete(args.id);
-  }
-})
+  },
+});

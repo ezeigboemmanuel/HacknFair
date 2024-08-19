@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
@@ -73,6 +73,8 @@ const CreateCompetition = () => {
 
   const generateUploadUrl = useMutation(api.fairs.generateUploadUrl);
 
+  const user = useQuery(api.users.getCurrentUser)
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedImages(Array.from(e.target.files || []));
     const file = e.target.files?.[0];
@@ -120,7 +122,7 @@ const CreateCompetition = () => {
           alert("Create fair error");
         });
 
-        router.push("/judge");
+        router.push(`/judge/${user?._id}`);
       })
     );
 

@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
@@ -62,6 +62,7 @@ interface EditCompetitionProps {
   judgingCriteria: string | undefined;
   imageURL: string;
   fairId: Id<"fairs">;
+  fmrStorageId: Id<"_storage">;
 }
 
 const EditCompetition = ({
@@ -73,6 +74,7 @@ const EditCompetition = ({
   imageURL,
   judgingCriteria,
   prices,
+  fmrStorageId,
   requirements,
 }: EditCompetitionProps) => {
   const updateFair = useMutation(api.fairs.updateFair);
@@ -93,7 +95,7 @@ const EditCompetition = ({
 
   const router = useRouter();
 
-  const storeFair = useMutation(api.fairs.storeFair);
+  const user = useQuery(api.users.getCurrentUser);
 
   const generateUploadUrl = useMutation(api.fairs.generateUploadUrl);
 
@@ -111,6 +113,27 @@ const EditCompetition = ({
     if (!imageUrl) {
       alert("Please input an Image");
       return;
+    }
+
+    if(selectedImages.length === 0){
+      await updateFair({
+        id: fairId,
+        title: data.title,
+        subtitle: data.subtitle,
+        imageUrl,
+        about: data.about,
+        deadline,
+        storageId: fmrStorageId,
+        requirements: data.requirements,
+        prices: data.prices,
+        judgingCriteria: data.judgingCriteria,
+        format: "image",
+      }).catch((error) => {
+        console.log(error);
+        alert("Update fair error");
+      });
+  
+      router.push(`/judge/${user?._id}`);
     }
 
     await Promise.all(
@@ -145,7 +168,7 @@ const EditCompetition = ({
           alert("Update fair error");
         });
 
-        router.push("/judge");
+        router.push(`/judge/${user?._id}`);
       })
     );
 

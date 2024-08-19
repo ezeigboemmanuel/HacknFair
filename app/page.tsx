@@ -7,6 +7,7 @@ import { useEffect } from "react";
 
 export default function Home() {
   const store = useMutation(api.users.storeUser);
+  const user = useQuery(api.users.getCurrentUser)
 
   useEffect(() => {
     const storeUser = async () => {
@@ -17,7 +18,7 @@ export default function Home() {
   }, [store]);
   return (
     <main className="mx-4">
-      <Link href="/judge">
+      <Link href={`/judge/${user?._id}`}>
         <Button className="my-10">Become an organizer</Button>
       </Link>
       <br />
