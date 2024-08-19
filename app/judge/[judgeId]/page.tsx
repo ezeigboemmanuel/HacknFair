@@ -20,15 +20,11 @@ const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
         {fairs?.map((fair) => (
           <Link key={fair._id} href={`/judge/${params.judgeId}/${fair._id}`}>
             <div className="mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
-              <a href="#">
-                <img className="rounded-t-lg" src={fair.imageUrl} alt="" />
-              </a>
+              <img className="rounded-t-lg" src={fair.imageUrl} alt="" />
               <div className="p-5">
-                <a href="#">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {fair.title}
-                  </h5>
-                </a>
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {fair.title}
+                </h5>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                   {fair.subtitle}
                 </p>
