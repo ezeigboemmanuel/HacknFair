@@ -29,10 +29,9 @@ export default defineSchema({
     email: v.string(),
     about: v.string(),
     imageUrl: v.string(),
-    storageId: v.id("_storage"),
+    storageId: v.array(v.id("_storage")),
     format: v.string(),
     userId: v.id("users"),
-    fairId: v.id("fairs")
-  })
-  .index("by_title", ["title"]),
+    fairId: v.id("fairs"),
+  }).index("by_title", ["title"]),
 });
