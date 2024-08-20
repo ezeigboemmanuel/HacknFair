@@ -120,10 +120,11 @@ export const getSingleFair = query({
   args: { id: v.id("fairs") },
   handler: async (ctx, args) => {
     const fair = await ctx.db.get(args.id);
-
     if (fair === null) {
       throw new Error("Fair not found");
     }
+
+    const judge = await ctx.db.get(fair.judgeId);
 
     const singleFair = await ctx.db
       .query("fairs")
@@ -139,7 +140,7 @@ export const getSingleFair = query({
           if (!imageUrl) {
             throw new Error("Image not found");
           }
-          return { ...fair, imageUrl: imageUrl };
+          return { ...fair, judge: judge, imageUrl: imageUrl };
         })
       )
     );

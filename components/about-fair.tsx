@@ -7,6 +7,7 @@ interface AboutFairProps {
   requirements: string | undefined;
   prices: string | undefined;
   judgingCriteria: string | undefined;
+  name?: string;
 }
 
 const AboutFair = ({
@@ -18,11 +19,13 @@ const AboutFair = ({
   requirements,
   prices,
   judgingCriteria,
+  name
 }: AboutFairProps) => {
   return (
     <div className="mt-5">
       <h1 className="font-bold break-normal text-3xl md:text-5xl">{title}</h1>
       <h3 className="italic text-gray-500">{subtitle}</h3>
+      <p className="mt-2 mb-2 text-sm">Created by: {name}</p>
       <p className="mt-2 mb-2 text-sm">Deadline: {deadline}</p>
       <img src={imageUrl} />
       <h2 className="my-6 font-semibold text-xl">About</h2>

@@ -4,16 +4,19 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Submissions from "@/components/submissions";
 
 const FairPage = ({ params }: { params: { fairId: string } }) => {
   const user = useQuery(api.users.getCurrentUser);
-  const fair = useQuery(api.fairs.getSingleFairForJudge, {
+  const fair = useQuery(api.fairs.getSingleFair, {
     id: params.fairId as Id<"fairs">,
-    userId: user?._id,
   });
+  
+  if (user?._id !== fair?.map((item) => item.judgeId)[0]) {
+    redirect(`/${params.fairId}`);
+  }
 
   const deleteFair = useMutation(api.fairs.deleteFair);
 

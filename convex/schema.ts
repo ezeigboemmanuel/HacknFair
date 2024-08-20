@@ -22,6 +22,17 @@ export default defineSchema({
     format: v.string(),
     judgeId: v.id("users"),
   })
-  .index("by_title", ["title"])
-  .index("by_subtitle", ["subtitle"])
+    .index("by_title", ["title"])
+    .index("by_subtitle", ["subtitle"]),
+  submissions: defineTable({
+    title: v.string(),
+    email: v.string(),
+    about: v.string(),
+    imageUrl: v.string(),
+    storageId: v.id("_storage"),
+    format: v.string(),
+    userId: v.id("users"),
+    fairId: v.id("fairs")
+  })
+  .index("by_title", ["title"]),
 });

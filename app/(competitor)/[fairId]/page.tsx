@@ -23,7 +23,10 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
 
   return (
     <div className="max-w-4xl mx-auto px-4">
-      <Link href="" className="flex space-x-3 mt-5 justify-end">
+      <Link
+        href={`/${params.fairId}/submit`}
+        className="flex space-x-3 mt-5 justify-end"
+      >
         <Button>Make submission</Button>
       </Link>
       <Tabs defaultValue="about">
@@ -33,17 +36,18 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
         </TabsList>
         <TabsContent value="about">
           {fair?.map((item) => (
-            <AboutFair
-              key={item._id}
-              title={item.title}
-              subtitle={item.subtitle}
-              about={item.about}
-              deadline={item.deadline}
-              imageUrl={item.imageUrl}
-              judgingCriteria={item.judgingCriteria}
-              prices={item.prices}
-              requirements={item.requirements}
-            />
+              <AboutFair
+                key={item._id}
+                title={item.title}
+                subtitle={item.subtitle}
+                about={item.about}
+                deadline={item.deadline}
+                imageUrl={item.imageUrl}
+                judgingCriteria={item.judgingCriteria}
+                prices={item.prices}
+                requirements={item.requirements}
+                name={item.judge?.name}
+              />
           ))}
         </TabsContent>
         <TabsContent value="submissions">
