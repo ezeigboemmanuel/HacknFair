@@ -30,7 +30,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
 
   return (
     <div className="max-w-4xl mx-auto px-4">
-      {user?._id == fair?.map((item) => item.judgeId) && (
+      {user?._id == fair?.map((item) => item.judgeId) ? (
         <div className="flex space-x-3 mt-5 justify-end">
           <Button
             onClick={() =>
@@ -43,29 +43,25 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
             Delete
           </Button>
         </div>
-      )}
-      {fair?.map((item) => item._id) !==
-        submissions?.map((submission) => submission.fairId) && (
+      ) : (
         <div className="flex space-x-3 mt-5 justify-end">
-          {user?._id != fair?.map((item) => item.judgeId) &&
-          submissions
+          {submissions
             ?.map((submission) => submission.userId)
             .includes(user!._id) ? (
             <Button disabled>Already Submitted</Button>
           ) : (
-            user?._id != fair?.map((item) => item.judgeId) && (
-              <Button
-                disabled={submissions
-                  ?.map((submission) => submission.userId)
-                  .includes(user!._id)}
-                onClick={() => router.push(`/${params.fairId}/submit`)}
-              >
-                Make submission
-              </Button>
-            )
+            <Button
+              disabled={submissions
+                ?.map((submission) => submission.userId)
+                .includes(user!._id)}
+              onClick={() => router.push(`/${params.fairId}/submit`)}
+            >
+              Make submission
+            </Button>
           )}
         </div>
       )}
+      
       <Tabs defaultValue="about">
         <TabsList>
           <TabsTrigger value="about">About</TabsTrigger>
