@@ -122,7 +122,7 @@ const MakeSubmission = () => {
     })
       .then(() => {
         toast.success("Project submitted successfully!");
-        router.push(`/${fair.map((item) => item._id)}`);
+        router.back();
       })
       .catch((error) => {
         console.log(error);
