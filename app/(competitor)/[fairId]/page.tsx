@@ -62,7 +62,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           ))}
         </TabsContent>
         <TabsContent value="submissions">
-          <Submissions />
+          <Submissions fairId={fair?.map((item) => item._id)[0] as Id<"fairs">} />
         </TabsContent>
       </Tabs>
     </div>

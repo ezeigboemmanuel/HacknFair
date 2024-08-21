@@ -95,3 +95,38 @@ export const get = query({
     return submissionsWithImages;
   },
 });
+
+
+export const getSingleSubmission = query({
+  args: { id: v.id("submissions") },
+  handler: async (ctx, args) => {
+    const submission = await ctx.db.get(args.id);
+    if (submission === null) {
+      throw new Error("Submission not found");
+    }
+
+    const creator = await ctx.db.get(submission.userId);
+
+    const singleSubmission = await ctx.db
+      .query("submissions")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect();
+
+    const singleSubmissionWithImage = await Promise.all(
+      singleSubmission.map(async (item) => {
+        const imageUrls = await Promise.all(
+          item.storageId.map(async (id) => {
+            const imageUrl = await ctx.storage.getUrl(id);
+            if (!imageUrl) {
+              throw new Error("Image not found");
+            }
+            return imageUrl;
+          })
+        );
+        return { ...item, imageUrls, creator};
+      })
+    );
+
+    return singleSubmissionWithImage;
+  },
+});

@@ -3,8 +3,9 @@
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import SubmissionCard from "./submission-card";
+import { Id } from "@/convex/_generated/dataModel";
 
-const Submissions = () => {
+const Submissions = ({ fairId }: { fairId: Id<"fairs"> }) => {
   const submissions = useQuery(api.submissions.get);
   return (
     <div>
@@ -15,7 +16,7 @@ const Submissions = () => {
           about={submission.about}
           email={submission.email}
           imageUrls={submission.imageUrls}
-          link={submission._id}
+          link={`${fairId}/${submission._id}`}
           userId={submission.userId}
           creatorName={submission.creator?.name}
         />
