@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 const ToastProvider = () => {
   return (
-    <div><Toaster /></div>
+    <div><Toaster position='top-right' /></div>
   )
 }
 
