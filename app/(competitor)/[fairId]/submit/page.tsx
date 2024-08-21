@@ -7,10 +7,10 @@ import { useQuery } from "convex/react";
 import { redirect, useParams, useRouter } from "next/navigation";
 
 const SubmitPage = () => {
-  const submissions = useQuery(api.submissions.get);
+  const params = useParams()
+  const submissions = useQuery(api.submissions.getSubmissionsByFair, {id: params.fairId as Id<"fairs">});
   const user = useQuery(api.users.getCurrentUser);
   const router = useRouter();
-  const params = useParams()
   const fair = useQuery(api.fairs.getSingleFair, {
     id: params.fairId as Id<"fairs">,
   });
