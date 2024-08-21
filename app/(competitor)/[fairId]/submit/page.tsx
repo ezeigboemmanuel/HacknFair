@@ -15,7 +15,7 @@ const SubmitPage = () => {
     id: params.fairId as Id<"fairs">,
   });
   if (submissions?.map((submission) => submission.userId).includes(user!._id)){
-    redirect(`/${fair?.map((item) => item._id)[0]}/${submissions.map((submission) => submission._id)[0]}`)
+    redirect(`/${fair?.map((item) => item._id)}/${submissions.map((submission) => submission._id)[0]}`)
   }
     return (
       <div>
