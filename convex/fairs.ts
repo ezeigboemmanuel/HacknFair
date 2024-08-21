@@ -65,17 +65,13 @@ export const get = query({
     const fairs = await ctx.db.query("fairs").order("desc").collect();
 
     const fairsWithImages = await Promise.all(
-      // get images
-
-      await Promise.all(
-        fairs.map(async (fair) => {
-          const imageUrl = await ctx.storage.getUrl(fair.storageId);
-          if (!imageUrl) {
-            throw new Error("Image not found");
-          }
-          return { ...fair, imageUrl: imageUrl };
-        })
-      )
+      fairs.map(async (fair) => {
+        const imageUrl = await ctx.storage.getUrl(fair.storageId);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...fair, imageUrl: imageUrl };
+      })
     );
     return fairsWithImages;
   },
@@ -96,17 +92,13 @@ export const getFairsByUser = query({
       .collect();
 
     const fairsWithImages = await Promise.all(
-      // get images
-
-      await Promise.all(
-        fairs.map(async (fair) => {
-          const imageUrl = await ctx.storage.getUrl(fair.storageId);
-          if (!imageUrl) {
-            throw new Error("Image not found");
-          }
-          return { ...fair, imageUrl: imageUrl };
-        })
-      )
+      fairs.map(async (fair) => {
+        const imageUrl = await ctx.storage.getUrl(fair.storageId);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...fair, imageUrl: imageUrl };
+      })
     );
     return fairsWithImages;
   },
@@ -132,17 +124,13 @@ export const getSingleFair = query({
       .collect();
 
     const singleFairWithImage = await Promise.all(
-      // get images
-
-      await Promise.all(
-        singleFair.map(async (item) => {
-          const imageUrl = await ctx.storage.getUrl(item.storageId);
-          if (!imageUrl) {
-            throw new Error("Image not found");
-          }
-          return { ...fair, judge: judge, imageUrl: imageUrl };
-        })
-      )
+      singleFair.map(async (item) => {
+        const imageUrl = await ctx.storage.getUrl(item.storageId);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...fair, judge: judge, imageUrl: imageUrl };
+      })
     );
 
     return singleFairWithImage;
@@ -168,17 +156,13 @@ export const getSingleFairForJudge = query({
     }
 
     const singleFairWithImage = await Promise.all(
-      // get images
-
-      await Promise.all(
-        singleFair.map(async (item) => {
-          const imageUrl = await ctx.storage.getUrl(item.storageId);
-          if (!imageUrl) {
-            throw new Error("Image not found");
-          }
-          return { ...fair, imageUrl: imageUrl };
-        })
-      )
+      singleFair.map(async (item) => {
+        const imageUrl = await ctx.storage.getUrl(item.storageId);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...fair, imageUrl: imageUrl };
+      })
     );
 
     return singleFairWithImage;
