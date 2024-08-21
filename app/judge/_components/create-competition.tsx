@@ -205,7 +205,7 @@ const CreateCompetition = () => {
         />
 
         <div className="mb-6 mt-4">
-          <label className="block text-gray-800 font-semibold">Date</label>
+          <label className="block text-gray-800 font-semibold">Deadline</label>
           <input
             type="date"
             value={deadline}
