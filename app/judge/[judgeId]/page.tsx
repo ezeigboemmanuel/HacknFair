@@ -18,7 +18,7 @@ const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
       {fairs?.length === 0 && <p>No fair found.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
         {fairs?.map((fair) => (
-          <Link key={fair._id} href={`/judge/${params.judgeId}/${fair._id}`}>
+          <Link key={fair._id} href={`/${fair._id}`}>
             <div className="mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
               <img className="rounded-t-lg" src={fair.imageUrl} alt="" />
               <div className="p-5">

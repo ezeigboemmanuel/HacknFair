@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,11 +19,31 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
 
   const submissions = useQuery(api.submissions.get);
 
-  if (user?._id === fair?.map((item) => item.judgeId)[0]) {
-    redirect(`/judge/${fair?.map((item) => item.judgeId)[0]}/${params.fairId}`);
-  }
+  // if (user?._id === fair?.map((item) => item.judgeId)[0]) {
+  //   redirect(`/judge/${fair?.map((item) => item.judgeId)[0]}/${params.fairId}`);
+  // }
+  const deleteFair = useMutation(api.fairs.deleteFair);
+  const onDelete = async () => {
+    deleteFair({ id: params.fairId as Id<"fairs"> });
+    router.back();
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4">
+      {user?._id === fair?.map((item) => item.judgeId)[0] && (
+        <div className="flex space-x-3 mt-5 justify-end">
+          <Button
+            onClick={() =>
+              router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)
+            }
+          >
+            Edit
+          </Button>
+          <Button onClick={onDelete} variant="destructive">
+            Delete
+          </Button>
+        </div>
+      )}
       <div className="flex space-x-3 mt-5 justify-end">
         {submissions
           ?.map((submission) => submission.userId)
@@ -62,7 +82,9 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           ))}
         </TabsContent>
         <TabsContent value="submissions">
-          <Submissions fairId={fair?.map((item) => item._id)[0] as Id<"fairs">} />
+          <Submissions
+            fairId={fair?.map((item) => item._id)[0] as Id<"fairs">}
+          />
         </TabsContent>
       </Tabs>
     </div>
