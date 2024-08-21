@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -115,7 +116,7 @@ const EditCompetition = ({
       return;
     }
 
-    if(selectedImages.length === 0){
+    if (selectedImages.length === 0) {
       await updateFair({
         id: fairId,
         title: data.title,
@@ -132,7 +133,7 @@ const EditCompetition = ({
         console.log(error);
         alert("Update fair error");
       });
-  
+
       router.push(`/judge/${user?._id}`);
     }
 
@@ -163,16 +164,17 @@ const EditCompetition = ({
           prices: data.prices,
           judgingCriteria: data.judgingCriteria,
           format: "image",
-        }).catch((error) => {
-          console.log(error);
-          alert("Update fair error");
-        });
-
-        router.push(`/judge/${user?._id}`);
+        })
+          .then(() => {
+            toast.success("Fair updated successfully!");
+            router.push(`/judge/${user?._id}`);
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error("Update fair error");
+          });
       })
     );
-
-    alert("Fair updated successfully!");
   };
   return (
     <Form {...form}>

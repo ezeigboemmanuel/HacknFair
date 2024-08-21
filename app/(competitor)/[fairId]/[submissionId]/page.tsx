@@ -21,13 +21,16 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const singleSubmission = useQuery(api.submissions.getSingleSubmission, {
     id: params.submissionId,
   });
-  const user = useQuery(api.users.getCurrentUser);
   const fairParam = useParams();
   const fair = useQuery(api.fairs.getSingleFair, {
     id: fairParam.fairId as Id<"fairs">,
   });
+  const user = useQuery(api.users.getCurrentUser);
+  if (!user) {
+    return;
+  }
   return (
-    <div>
+    <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
         <p className="text-xl text-center mx-2  font-semibold">
           Submitted to:{" "}
@@ -40,7 +43,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
         </p>
         {singleSubmission
           ?.map((submission) => submission.userId)
-          .includes(user!._id) && (
+          .includes(user._id) && (
           <div className="flex space-x-3 justify-end">
             <Button onClick={() => {}}>Edit</Button>
             <Button variant="destructive">Delete</Button>
@@ -48,11 +51,11 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
         )}
       </div>
       {singleSubmission?.map((item) => (
-        <div className="max-w-4xl mx-auto">
+        <div key={item._id} className="max-w-4xl mx-auto">
           <Carousel>
             <CarouselContent>
               {item.imageUrls.map((url) => (
-                <CarouselItem>
+                <CarouselItem key={url}>
                   <AspectRatio ratio={16 / 9}>
                     <img src={url} />
                   </AspectRatio>

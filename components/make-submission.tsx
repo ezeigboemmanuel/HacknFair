@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -118,13 +119,15 @@ const MakeSubmission = () => {
       storageId: storageIds,
       about: data.about,
       format: "image",
-    }).catch((error) => {
-      console.log(error);
-      alert("Submission error");
-    });
-
-    router.push(`/${fair.map((item) => item._id)[0]}`);
-    alert("Project submitted successfully!");
+    })
+      .then(() => {
+        toast.success("Project submitted successfully!");
+        router.push(`/${fair.map((item) => item._id)[0]}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("You can upload only 5 images");
+      });
   };
   return (
     <Form {...form}>

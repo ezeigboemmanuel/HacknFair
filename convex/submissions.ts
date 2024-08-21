@@ -28,7 +28,7 @@ export const storeSubmission = mutation({
       return;
     }
 
-    if (args.storageId.length >= 5) {
+    if (args.storageId.length > 5) {
       throw new Error(
         "You can upload up to 5 media files. Please delete a media file before uploading a new one."
       );
@@ -130,3 +130,31 @@ export const getSingleSubmission = query({
     return singleSubmissionWithImage;
   },
 });
+
+
+export const getSubmissionsByFair = query({
+  args: {id: v.id("fairs")},
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const submissions = await ctx.db
+    .query("submissions")
+    .filter((q) => q.eq(q.field("fairId"), args.id))
+    .order("desc")
+    .collect();
+
+    const submissionsWithImage = await Promise.all(
+      submissions.map(async (submission) => {
+        const imageUrl = await ctx.storage.getUrl(submission.storageId[0]);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...submission, imageUrl: imageUrl };
+      })
+    );
+    return submissionsWithImage;
+  }
+})

@@ -5,6 +5,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import Link from "next/link";
 import { ArrowBigDown, ArrowBigUp, MessageSquare } from "lucide-react";
+import { AspectRatio } from "./ui/aspect-ratio";
 
 interface SubmissionCardProps {
   title: string;
@@ -34,11 +35,11 @@ const SubmissionCard = ({
             Owner
           </div>
         )}
-        <img
-          className="rounded-t-lg w-full max-h-72 object-cover object-center"
-          src={imageUrls.map((url) => url)[0]}
-          alt=""
-        />
+          <img
+            className="rounded-t-lg w-full max-h-72 object-cover object-center"
+            src={imageUrls.map((url) => url)[0]}
+            alt=""
+          />
         <div className="p-5">
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             {title}

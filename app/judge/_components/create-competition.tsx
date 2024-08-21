@@ -18,6 +18,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -73,7 +74,7 @@ const CreateCompetition = () => {
 
   const generateUploadUrl = useMutation(api.fairs.generateUploadUrl);
 
-  const user = useQuery(api.users.getCurrentUser)
+  const user = useQuery(api.users.getCurrentUser);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedImages(Array.from(e.target.files || []));
@@ -117,16 +118,17 @@ const CreateCompetition = () => {
           prices: data.prices,
           judgingCriteria: data.judgingCriteria,
           format: "image",
-        }).catch((error) => {
-          console.log(error);
-          alert("Create fair error");
-        });
-
-        router.push(`/judge/${user?._id}`);
+        })
+          .then(() => {
+            toast.success("Fair created successfully!");
+            router.push(`/judge/${user?._id}`);
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error("Create fair error");
+          });
       })
     );
-
-    alert("Fair created successfully!");
   };
   return (
     <Form {...form}>

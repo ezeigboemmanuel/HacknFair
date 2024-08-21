@@ -17,19 +17,23 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   });
   const router = useRouter();
 
-  const submissions = useQuery(api.submissions.get);
+  const submissions = useQuery(api.submissions.getSubmissionsByFair, {id: params.fairId});
 
   // if (user?._id === fair?.map((item) => item.judgeId)[0]) {
   //   redirect(`/judge/${fair?.map((item) => item.judgeId)[0]}/${params.fairId}`);
   // }
+
   const deleteFair = useMutation(api.fairs.deleteFair);
   const onDelete = async () => {
     deleteFair({ id: params.fairId as Id<"fairs"> });
     router.back();
   };
 
+  if(submissions == undefined){
+    return <div>loading...</div>
+  }
   return (
-    <div className="max-w-4xl mx-auto px-4">
+    <div className="max-w-5xl mx-auto px-4">
       {user?._id == fair?.map((item) => item.judgeId) ? (
         <div className="flex space-x-3 mt-5 justify-end">
           <Button
@@ -61,11 +65,11 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           )}
         </div>
       )}
-      
+
       <Tabs defaultValue="about">
         <TabsList>
           <TabsTrigger value="about">About</TabsTrigger>
-          <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="submissions">Submissions ({`${submissions?.length}`})</TabsTrigger>
         </TabsList>
         <TabsContent value="about">
           {fair?.map((item) => (
@@ -84,10 +88,9 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           ))}
         </TabsContent>
         <TabsContent value="submissions">
-          {fair?.map((item) => item._id) ==
-          submissions?.map((submission) => submission.fairId)[0] ? (
+          {submissions?.length > 0 ? (
             <Submissions
-              fairId={fair?.map((item) => item._id)[0] as Id<"fairs">}
+              fairId={fair?.map((item) => item._id) as Id<"fairs">[]}
             />
           ) : (
             <div>No submission yet</div>
