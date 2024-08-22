@@ -1,3 +1,5 @@
+import { AspectRatio } from "./ui/aspect-ratio";
+
 interface AboutFairProps {
   title: string;
   subtitle: string;
@@ -27,7 +29,10 @@ const AboutFair = ({
       <h3 className="italic text-gray-500">{subtitle}</h3>
       <p className="mt-2 mb-2 text-sm">Created by: {name}</p>
       <p className="mt-2 mb-2 text-sm">Deadline: {deadline}</p>
-      <img src={imageUrl} />
+      <AspectRatio ratio={16 / 9}>
+       <img src={imageUrl} className="object-cover w-full h-full" />
+      </AspectRatio>
+      
       <h2 className="my-6 font-semibold text-xl">About</h2>
       <p>{about}</p>
       <h2 className="my-6 font-semibold text-xl">Requirements</h2>

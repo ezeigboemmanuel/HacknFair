@@ -73,7 +73,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               {item.imageUrls.map((url) => (
                 <CarouselItem key={url}>
                   <AspectRatio ratio={16 / 9}>
-                    <img src={url} />
+                    <img src={url} className="object-cover w-full h-full" />
                   </AspectRatio>
                 </CarouselItem>
               ))}
