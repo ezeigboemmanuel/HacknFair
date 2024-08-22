@@ -9,6 +9,7 @@ import { redirect, useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AboutFair from "@/components/about-fair";
 import Submissions from "@/components/submissions";
+import toast from "react-hot-toast";
 
 const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
@@ -26,6 +27,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const deleteFair = useMutation(api.fairs.deleteFair);
   const onDelete = async () => {
     deleteFair({ id: params.fairId as Id<"fairs"> });
+    toast.success("Fair deleted successfully.")
     router.back();
   };
 

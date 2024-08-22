@@ -158,3 +158,109 @@ export const getSubmissionsByFair = query({
     return submissionsWithImage;
   }
 })
+
+
+export const getSingleSubmissionByUser = query({
+  args: { id: v.id("submissions"), userId: v.optional(v.id("users")) },
+  handler: async (ctx, args) => {
+    const submission = await ctx.db.get(args.id);
+
+    if (submission === null) {
+      throw new Error("Fair not found");
+    }
+
+    const singleFair = await ctx.db
+      .query("submissions")
+      .filter((q) => q.eq(q.field("_id"), args.id))
+      .collect();
+
+    if (singleFair.map((item) => item.userId)[0] !== args.userId) {
+      throw new Error("Unauthorised");
+    }
+
+    const singleFairWithImage = await Promise.all(
+      singleFair.map(async (item) => {
+        const imageUrl = await ctx.storage.getUrl(item.storageId[0]);
+        if (!imageUrl) {
+          throw new Error("Image not found");
+        }
+        return { ...submission, imageUrl: imageUrl };
+      })
+    );
+
+    return singleFairWithImage;
+  },
+});
+
+
+export const updateSubmission = mutation({
+  args: {
+    id: v.id("submissions"),
+    title: v.string(),
+    email: v.string(),
+    about: v.string(),
+    userId: v.id("users"),
+    fairId: v.id("fairs"),
+    imageUrl: v.string(),
+    storageId: v.array(v.id("_storage")),
+    format: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+
+    if (user === null) {
+      return;
+    }
+
+    if (args.storageId.length > 5) {
+      throw new Error(
+        "You can upload up to 5 media files. Please delete a media file before uploading a new one."
+      );
+    }
+
+    await ctx.db.patch(args.id, {
+      title: args.title,
+      email: args.email,
+      about: args.about,
+      imageUrl: args.imageUrl,
+      storageId: args.storageId,
+      format: args.format,
+      userId: args.userId,
+      fairId: args.fairId,
+    });
+  },
+});
+
+
+export const deleteSubmission = mutation({
+  args: { id: v.id("submissions") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+
+    if (user === null) {
+      return;
+    }
+
+    await ctx.db.delete(args.id);
+  },
+});

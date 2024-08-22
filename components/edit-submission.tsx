@@ -44,13 +44,19 @@ const formSchema = z.object({
   }),
 });
 
-const MakeSubmission = () => {
+interface EditSubmissionProps {
+  title: string;
+  about: string;
+  email: string;
+  id: Id<"submissions">;
+}
+const EditSubmission = ({ title, about, email, id }: EditSubmissionProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      email: "",
-      about: "",
+      title,
+      email,
+      about,
     },
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -58,7 +64,7 @@ const MakeSubmission = () => {
   const params = useParams();
   const router = useRouter();
 
-  const storeSubmission = useMutation(api.submissions.storeSubmission);
+  const updateSubmission = useMutation(api.submissions.updateSubmission);
 
   const generateUploadUrl = useMutation(api.submissions.generateUploadUrl);
 
@@ -110,7 +116,8 @@ const MakeSubmission = () => {
     );
     setSelectedImages([]);
     imageInput.current!.value = "";
-    await storeSubmission({
+    await updateSubmission({
+      id: id,
       title: data.title,
       email: data.email,
       imageUrl,
@@ -121,7 +128,7 @@ const MakeSubmission = () => {
       format: "image",
     })
       .then(() => {
-        toast.success("Project submitted successfully!");
+        toast.success("Project updated successfully!");
         router.back();
       })
       .catch((error) => {
@@ -232,11 +239,11 @@ const MakeSubmission = () => {
           variant="default"
           className="mt-6 w-full py-3 font-semibold rounded-lg"
         >
-          Submit your project
+          Update your project
         </Button>
       </form>
     </Form>
   );
 };
 
-export default MakeSubmission;
+export default EditSubmission;
