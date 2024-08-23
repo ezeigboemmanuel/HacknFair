@@ -317,5 +317,51 @@ export const downvoteSubmission = mutation({
   args: { submissionId: v.id("submissions"), userId: v.id("users") },
   handler: async (ctx, args) => {
     const submission = await ctx.db.get(args.submissionId);
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    if (!submission.votes) {
+      submission.votes = [];
+    }
+
+    if (!submission.upvotes) {
+      submission.upvotes = 0;
+    }
+
+    if (!submission.downvotes) {
+      submission.downvotes = 0;
+    }
+
+    const existingVoteIndex = submission.votes.findIndex(
+      (vote) => vote.userId === args.userId
+    );
+    const existingVote = submission.votes[existingVoteIndex];
+
+    if (existingVote && existingVote.voteType === "downvote") {
+      // User already downvoted, remove their vote (toggle off)
+      await ctx.db.patch(args.submissionId, {
+        downvotes: submission.downvotes - 1,
+        votes: submission.votes.filter((vote) => vote.userId !== args.userId),
+      });
+    } else if (existingVote && existingVote.voteType === "upvote") {
+      // User upvoted, switch to downvote
+      await ctx.db.patch(args.submissionId, {
+        upvotes: submission.upvotes - 1,
+        downvotes: submission.downvotes + 1,
+        votes: submission.votes.map((vote) =>
+          vote.userId === args.userId ? { ...vote, voteType: "downvote" } : vote
+        ),
+      });
+    } else {
+      // No previous vote, add downvote
+      await ctx.db.patch(args.submissionId, {
+        downvotes: submission.downvotes + 1,
+        votes: [
+          ...submission.votes,
+          { userId: args.userId, voteType: "downvote" },
+        ],
+      });
+    }
   },
 });
