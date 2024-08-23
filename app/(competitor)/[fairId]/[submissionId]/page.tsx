@@ -17,6 +17,8 @@ import { ArrowBigDown, ArrowBigUp, MessageSquare } from "lucide-react";
 import Comments from "@/components/comments";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import Submissions from "@/components/submissions";
 
 const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const router = useRouter();
@@ -31,12 +33,29 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const deleteFair = useMutation(api.submissions.deleteSubmission);
   const onDelete = async () => {
     deleteFair({ id: params.submissionId as Id<"submissions"> });
-    toast.success("Project deleted successfully.")
+    toast.success("Project deleted successfully.");
     router.back();
   };
+  const upvote = useMutation(api.submissions.upvoteSubmission);
+  const downvote = useMutation(api.submissions.downvoteSubmission);
+
   if (!user) {
     return;
   }
+
+  const handleUpvote = async () => {
+    await upvote({
+      userId: user._id,
+      submissionId: params.submissionId,
+    });
+  };
+
+  const handleDownvote = async () => {
+    await downvote({
+      userId: user._id,
+      submissionId: params.submissionId,
+    });
+  };
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
@@ -62,7 +81,9 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
             >
               Edit
             </Button>
-            <Button variant="destructive" onClick={onDelete}>Delete</Button>
+            <Button variant="destructive" onClick={onDelete}>
+              Delete
+            </Button>
           </div>
         )}
       </div>
@@ -88,12 +109,16 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
 
             <div className="flex space-x-2 text-gray-600 my-4">
               <div className="flex">
-                <ArrowBigUp />
-                <p>20</p>
+                <ArrowBigUp
+                  className={`cursor-pointer hover:stroke-black ${item.voters?.includes(user._id) ? "fill-black stroke-black" : ""}`}
+                  onClick={handleUpvote}
+                />
+                <p>{item.upvotes}</p>
               </div>
               <div className="flex">
-                <ArrowBigDown />
-                <p>5</p>
+                <ArrowBigDown className={`cursor-pointer hover:stroke-black ${item.voters?.includes(user._id) ? "fill-black stroke-black" : ""}`}
+                  onClick={handleDownvote} />
+                <p>{item.downvotes}</p>
               </div>
             </div>
 

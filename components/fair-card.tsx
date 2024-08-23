@@ -25,7 +25,7 @@ const FairCard = ({
     <Link href={`/${link}`}>
       <div className="relative mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
         {userId === judgeId && (
-          <div className="absolute top-0 right-0 bg-black text-white p-1 text-sm rounded-md">
+          <div className="absolute z-10 top-0 right-0 bg-black text-white p-1 text-sm rounded-md">
             Judge
           </div>
         )}

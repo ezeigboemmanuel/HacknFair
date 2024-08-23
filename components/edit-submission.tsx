@@ -49,8 +49,15 @@ interface EditSubmissionProps {
   about: string;
   email: string;
   id: Id<"submissions">;
+  fmrStorageIds: Id<"_storage">[];
 }
-const EditSubmission = ({ title, about, email, id }: EditSubmissionProps) => {
+const EditSubmission = ({
+  title,
+  about,
+  email,
+  id,
+  fmrStorageIds,
+}: EditSubmissionProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,10 +98,28 @@ const EditSubmission = ({ title, about, email, id }: EditSubmissionProps) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const postUrl = await generateUploadUrl();
 
-    if (!imageUrl) {
-      toast.error("Please input an Image");
-      return;
+    if (selectedImages.length === 0) {
+      await updateSubmission({
+        id: id,
+        title: data.title,
+        email: data.email,
+        imageUrl,
+        userId: user._id,
+        fairId: fair.map((item) => item._id)[0],
+        storageId: fmrStorageIds,
+        about: data.about,
+        format: "image",
+      })
+        .then(() => {
+          toast.success("Project updated successfully!");
+          router.back();
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("Update fair error");
+        });
     }
+
     const storageIds: Id<"_storage">[] = [];
     await Promise.all(
       selectedImages.map(async (image) => {

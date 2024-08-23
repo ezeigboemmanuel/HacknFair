@@ -67,14 +67,11 @@ export const get = query({
     if (user === null) {
       return;
     }
-    
 
     const submissions = await ctx.db
       .query("submissions")
       .order("desc")
       .collect();
-
-     
 
     const submissionsWithImages = await Promise.all(
       submissions.map(async (item) => {
@@ -88,14 +85,13 @@ export const get = query({
             return imageUrl;
           })
         );
-        return { ...item, imageUrls, creator: creator};
+        return { ...item, imageUrls, creator: creator };
       })
     );
 
     return submissionsWithImages;
   },
 });
-
 
 export const getSingleSubmission = query({
   args: { id: v.id("submissions") },
@@ -123,7 +119,7 @@ export const getSingleSubmission = query({
             return imageUrl;
           })
         );
-        return { ...item, imageUrls, creator};
+        return { ...item, imageUrls, creator };
       })
     );
 
@@ -131,9 +127,8 @@ export const getSingleSubmission = query({
   },
 });
 
-
 export const getSubmissionsByFair = query({
-  args: {id: v.id("fairs")},
+  args: { id: v.id("fairs") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -141,10 +136,10 @@ export const getSubmissionsByFair = query({
     }
 
     const submissions = await ctx.db
-    .query("submissions")
-    .filter((q) => q.eq(q.field("fairId"), args.id))
-    .order("desc")
-    .collect();
+      .query("submissions")
+      .filter((q) => q.eq(q.field("fairId"), args.id))
+      .order("desc")
+      .collect();
 
     const submissionsWithImage = await Promise.all(
       submissions.map(async (submission) => {
@@ -156,9 +151,8 @@ export const getSubmissionsByFair = query({
       })
     );
     return submissionsWithImage;
-  }
-})
-
+  },
+});
 
 export const getSingleSubmissionByUser = query({
   args: { id: v.id("submissions"), userId: v.optional(v.id("users")) },
@@ -191,7 +185,6 @@ export const getSingleSubmissionByUser = query({
     return singleFairWithImage;
   },
 });
-
 
 export const updateSubmission = mutation({
   args: {
@@ -240,7 +233,6 @@ export const updateSubmission = mutation({
   },
 });
 
-
 export const deleteSubmission = mutation({
   args: { id: v.id("submissions") },
   handler: async (ctx, args) => {
@@ -262,5 +254,67 @@ export const deleteSubmission = mutation({
     }
 
     await ctx.db.delete(args.id);
+  },
+});
+
+// For votes
+
+export const upvoteSubmission = mutation({
+  args: { submissionId: v.id("submissions"), userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const submission = await ctx.db.get(args.submissionId);
+
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    if (!submission.voters) {
+      submission.voters = [];
+    }
+
+    if(!submission.upvotes){
+      submission.upvotes = 0;
+    }
+    const hasVoted = submission.voters?.includes(args.userId);
+
+
+    if (!hasVoted) {
+      await ctx.db.patch(args.submissionId, {
+        upvotes: submission.upvotes + 1,
+        voters: [...submission.voters, args.userId],
+      });
+    } else {
+      return;
+    }
+  },
+});
+
+
+export const downvoteSubmission = mutation({
+  args: { submissionId: v.id("submissions"), userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const submission = await ctx.db.get(args.submissionId);
+
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    if (!submission.voters) {
+      submission.voters = [];
+    }
+
+    if(!submission.downvotes){
+      submission.downvotes = 0;
+    }
+    const hasVoted = submission.voters?.includes(args.userId);
+
+    if (!hasVoted) {
+      await ctx.db.patch(args.submissionId, {
+        upvotes: submission.downvotes + 1,
+        voters: [...submission.voters, args.userId],
+      });
+    } else {
+      return;
+    }
   },
 });

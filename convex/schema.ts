@@ -33,5 +33,8 @@ export default defineSchema({
     format: v.string(),
     userId: v.id("users"),
     fairId: v.id("fairs"),
+    upvotes: v.optional(v.number()), 
+    downvotes: v.optional(v.number()), 
+    voters: v.optional(v.array(v.id("users"))),
   }).index("by_title", ["title"]),
 });

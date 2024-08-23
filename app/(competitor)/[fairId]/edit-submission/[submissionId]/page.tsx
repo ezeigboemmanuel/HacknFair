@@ -14,7 +14,14 @@ const EditPage = ({ params }: { params: { submissionId: string } }) => {
   return (
     <div>
       {submission?.map((item) => (
-        <EditSubmission key={item._id} id={item._id} title={item.title} email={item.email} about={item.about} />
+        <EditSubmission
+          key={item._id}
+          id={item._id}
+          title={item.title}
+          email={item.email}
+          about={item.about}
+          fmrStorageIds={item.storageId}
+        />
       ))}
     </div>
   );

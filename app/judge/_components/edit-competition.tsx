@@ -111,11 +111,6 @@ const EditCompetition = ({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     const postUrl = await generateUploadUrl();
 
-    if (!imageUrl) {
-      alert("Please input an Image");
-      return;
-    }
-
     if (selectedImages.length === 0) {
       await updateFair({
         id: fairId,
@@ -129,12 +124,15 @@ const EditCompetition = ({
         prices: data.prices,
         judgingCriteria: data.judgingCriteria,
         format: "image",
-      }).catch((error) => {
-        console.log(error);
-        alert("Update fair error");
-      });
-
-      router.push(`/judge/${user?._id}`);
+      })
+        .then(() => {
+          toast.success("Fair updated successfully!");
+          router.push(`/judge/${user?._id}`);
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.success("Update fair error");
+        });
     }
 
     await Promise.all(
