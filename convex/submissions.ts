@@ -268,53 +268,54 @@ export const upvoteSubmission = mutation({
       throw new Error("Submission not found");
     }
 
-    if (!submission.voters) {
-      submission.voters = [];
+    if (!submission.votes) {
+      submission.votes = [];
     }
 
-    if(!submission.upvotes){
+    if (!submission.upvotes) {
       submission.upvotes = 0;
     }
-    const hasVoted = submission.voters?.includes(args.userId);
 
+    if (!submission.downvotes) {
+      submission.downvotes = 0;
+    }
 
-    if (!hasVoted) {
+    const existingVoteIndex = submission.votes?.findIndex(
+      (vote) => vote.userId === args.userId
+    );
+    const existingVote = submission.votes[existingVoteIndex];
+
+    if (existingVote && existingVote.voteType === "upvote") {
+      // User already upvoted, remove their vote (toggle off)
+      await ctx.db.patch(args.submissionId, {
+        upvotes: submission.upvotes - 1,
+        votes: submission.votes.filter((vote) => vote.userId !== args.userId),
+      });
+    } else if (existingVote && existingVote.voteType === "downvote") {
+      // User downvoted, switch to upvote
       await ctx.db.patch(args.submissionId, {
         upvotes: submission.upvotes + 1,
-        voters: [...submission.voters, args.userId],
+        downvotes: submission.downvotes - 1,
+        votes: submission.votes.map((vote) =>
+          vote.userId === args.userId ? { ...vote, voteType: "upvote" } : vote
+        ),
       });
     } else {
-      return;
+      // No previous vote, add upvote
+      await ctx.db.patch(args.submissionId, {
+        upvotes: submission.upvotes + 1,
+        votes: [
+          ...submission.votes,
+          { userId: args.userId, voteType: "upvote" },
+        ],
+      });
     }
   },
 });
-
 
 export const downvoteSubmission = mutation({
   args: { submissionId: v.id("submissions"), userId: v.id("users") },
   handler: async (ctx, args) => {
     const submission = await ctx.db.get(args.submissionId);
-
-    if (!submission) {
-      throw new Error("Submission not found");
-    }
-
-    if (!submission.voters) {
-      submission.voters = [];
-    }
-
-    if(!submission.downvotes){
-      submission.downvotes = 0;
-    }
-    const hasVoted = submission.voters?.includes(args.userId);
-
-    if (!hasVoted) {
-      await ctx.db.patch(args.submissionId, {
-        upvotes: submission.downvotes + 1,
-        voters: [...submission.voters, args.userId],
-      });
-    } else {
-      return;
-    }
   },
 });

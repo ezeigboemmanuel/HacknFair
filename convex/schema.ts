@@ -35,6 +35,9 @@ export default defineSchema({
     fairId: v.id("fairs"),
     upvotes: v.optional(v.number()), 
     downvotes: v.optional(v.number()), 
-    voters: v.optional(v.array(v.id("users"))),
+    votes: v.optional(v.array(v.object({
+      userId: v.id("users"),
+      voteType: v.string()
+    }))),
   }).index("by_title", ["title"]),
 });
