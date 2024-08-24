@@ -39,5 +39,10 @@ export default defineSchema({
       userId: v.id("users"),
       voteType: v.string()
     }))),
+    comments: v.optional(v.array(v.object({
+      userId: v.id("users"),
+      comment: v.string(),
+      createdAt: v.string(),
+    }))),
   }).index("by_title", ["title"]),
 });

@@ -56,6 +56,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
       submissionId: params.submissionId,
     });
   };
+
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
@@ -110,19 +111,21 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
             <div className="flex space-x-2 text-gray-600 my-4">
               <div className="flex">
                 <ArrowBigUp
-                  className={`cursor-pointer hover:stroke-black ${item.voters?.includes(user._id) ? "fill-black stroke-black" : ""}`}
+                  className={`cursor-pointer hover:stroke-black ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
                   onClick={handleUpvote}
                 />
-                <p>{item.upvotes}</p>
+                <p>{item.upvotes ? item.upvotes : "0"}</p>
               </div>
               <div className="flex">
-                <ArrowBigDown className={`cursor-pointer hover:stroke-black ${item.voters?.includes(user._id) ? "fill-black stroke-black" : ""}`}
-                  onClick={handleDownvote} />
-                <p>{item.downvotes}</p>
+                <ArrowBigDown
+                  className={`cursor-pointer hover:stroke-black ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
+                  onClick={handleDownvote}
+                />
+                <p>{item.downvotes ? item.downvotes : "0"}</p>
               </div>
             </div>
 
-            <Comments />
+            <Comments submissionId={item._id} />
           </div>
         </div>
       ))}

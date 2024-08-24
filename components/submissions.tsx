@@ -19,6 +19,9 @@ const Submissions = ({ fairId }: { fairId: Id<"fairs">[] }) => {
           link={`${fairId}/${submission._id}`}
           userId={submission.userId}
           creatorName={submission.creator?.name}
+          upvotes = {submission.upvotes}
+          downvotes = {submission.downvotes}
+          votes = {submission.votes}
         />
       ))}
     </div>

@@ -15,6 +15,14 @@ interface SubmissionCardProps {
   link: string;
   userId: Id<"users">;
   creatorName?: string;
+  upvotes: number | undefined;
+  downvotes: number | undefined;
+  votes:
+    | {
+        userId: Id<"users">;
+        voteType: string;
+      }[]
+    | undefined;
 }
 
 const SubmissionCard = ({
@@ -25,8 +33,14 @@ const SubmissionCard = ({
   link,
   userId,
   creatorName,
+  upvotes,
+  downvotes,
+  votes,
 }: SubmissionCardProps) => {
   const currentUser = useQuery(api.users.getCurrentUser);
+  if (!currentUser) {
+    return;
+  }
   return (
     <Link href={`/${link}`}>
       <div className="relative mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
@@ -35,11 +49,11 @@ const SubmissionCard = ({
             Owner
           </div>
         )}
-          <img
-            className="rounded-t-lg w-full max-h-72 object-cover object-center"
-            src={imageUrls.map((url) => url)[0]}
-            alt=""
-          />
+        <img
+          className="rounded-t-lg w-full max-h-72 object-cover object-center"
+          src={imageUrls.map((url) => url)[0]}
+          alt=""
+        />
         <div className="p-5">
           <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             {title}
@@ -50,12 +64,16 @@ const SubmissionCard = ({
 
           <div className="flex space-x-2 text-gray-600">
             <div className="flex">
-              <ArrowBigUp />
-              <p>20</p>
+              <ArrowBigUp
+                className={`cursor-pointer hover:stroke-black ${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
+              />
+              <p>{upvotes ? upvotes : 0}</p>
             </div>
             <div className="flex">
-              <ArrowBigDown />
-              <p>5</p>
+              <ArrowBigDown
+                className={`cursor-pointer hover:stroke-black ${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
+              />
+              <p>{downvotes ? downvotes : "0"}</p>
             </div>
             <div className="flex">
               <MessageSquare />
