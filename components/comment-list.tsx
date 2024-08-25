@@ -8,8 +8,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useMutation } from "convex/react";
 import { Ellipsis } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface CommentListProps {
   comment: string;
@@ -27,8 +30,9 @@ const CommentList = ({
   setComment,
   setEdit,
   setId,
-  id
+  id,
 }: CommentListProps) => {
+  const deleteComment = useMutation(api.comments.deleteComment);
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString("en-US", {
@@ -43,7 +47,13 @@ const CommentList = ({
   const handleEdit = () => {
     setComment(comment);
     setEdit(true);
-    setId(id)
+    setId(id);
+  };
+
+  const handleDelete = (id: Id<"comments">) => {
+    deleteComment({ id: id }).then(() => {
+      toast.success("Comment deleted successfully.");
+    });
   };
   return (
     <article className="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
@@ -65,7 +75,9 @@ const CommentList = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDelete(id)} className="text-red-500">
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </footer>
