@@ -29,9 +29,6 @@ export const storeComments = mutation({
       throw new Error("Submission not found");
     }
 
-    //   if (!submission.comments) {
-    //     submission.comments = [];
-    //   }
     await ctx.db.insert("comments", {
       userId: args.userId,
       submissionId: args.submissionId,

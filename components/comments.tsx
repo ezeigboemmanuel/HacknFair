@@ -125,6 +125,7 @@ const Comments = ({ submissionId }: CommentsProps) => {
                   createdAt={comment.createdAt}
                   setComment={setComment}
                   setEdit={setEdit}
+                  userId={comment.userId}
                 />
               )
           )}

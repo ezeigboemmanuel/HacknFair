@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { Ellipsis } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -22,6 +22,7 @@ interface CommentListProps {
   setEdit: (value: boolean) => void;
   id: Id<"comments">;
   setId: (value: Id<"comments">) => void;
+  userId: Id<"users">;
 }
 const CommentList = ({
   comment,
@@ -31,8 +32,10 @@ const CommentList = ({
   setEdit,
   setId,
   id,
+  userId
 }: CommentListProps) => {
   const deleteComment = useMutation(api.comments.deleteComment);
+  const user = useQuery(api.users.getCurrentUser);
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString("en-US", {
@@ -69,7 +72,7 @@ const CommentList = ({
           </p>
         </div>
 
-        <DropdownMenu>
+        {userId == user?._id && <DropdownMenu>
           <DropdownMenuTrigger>
             <Ellipsis />
           </DropdownMenuTrigger>
@@ -79,7 +82,7 @@ const CommentList = ({
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>}
       </footer>
       <p className="text-gray-500 dark:text-gray-400">{comment}</p>
     </article>
