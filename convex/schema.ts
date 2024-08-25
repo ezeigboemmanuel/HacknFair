@@ -43,6 +43,7 @@ export default defineSchema({
       userId: v.id("users"),
       comment: v.string(),
       createdAt: v.string(),
+      commentCreator: v.optional(v.string())
     }))),
   }).index("by_title", ["title"]),
 });

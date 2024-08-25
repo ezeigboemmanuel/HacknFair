@@ -23,6 +23,7 @@ interface SubmissionCardProps {
         voteType: string;
       }[]
     | undefined;
+  commentLength: number | undefined;
 }
 
 const SubmissionCard = ({
@@ -36,6 +37,7 @@ const SubmissionCard = ({
   upvotes,
   downvotes,
   votes,
+  commentLength,
 }: SubmissionCardProps) => {
   const currentUser = useQuery(api.users.getCurrentUser);
   if (!currentUser) {
@@ -65,19 +67,19 @@ const SubmissionCard = ({
           <div className="flex space-x-2 text-gray-600">
             <div className="flex">
               <ArrowBigUp
-                className={`cursor-pointer hover:stroke-black ${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
+                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
               />
               <p>{upvotes ? upvotes : 0}</p>
             </div>
             <div className="flex">
               <ArrowBigDown
-                className={`cursor-pointer hover:stroke-black ${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
+                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
               />
               <p>{downvotes ? downvotes : "0"}</p>
             </div>
             <div className="flex">
               <MessageSquare />
-              <p>12</p>
+              <p>{commentLength ? commentLength : "0"}</p>
             </div>
           </div>
         </div>

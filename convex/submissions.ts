@@ -397,7 +397,7 @@ export const storeComments = mutation({
     if (!submission.comments) {
       submission.comments = [];
     }
-
+    const commentCreator = await ctx.db.get(args.userId);
     await ctx.db.patch(args.submissionId, {
       comments: [
         ...submission.comments,
@@ -405,6 +405,7 @@ export const storeComments = mutation({
           userId: args.userId,
           comment: args.comment,
           createdAt: args.createdAt,
+          commentCreator: commentCreator?.name,
         },
       ],
     });

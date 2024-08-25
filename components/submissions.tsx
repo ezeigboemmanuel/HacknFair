@@ -22,6 +22,7 @@ const Submissions = ({ fairId }: { fairId: Id<"fairs">[] }) => {
           upvotes = {submission.upvotes}
           downvotes = {submission.downvotes}
           votes = {submission.votes}
+          commentLength = {submission.comments?.length}
         />
       ))}
     </div>
