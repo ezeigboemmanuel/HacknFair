@@ -125,7 +125,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               </div>
             </div>
 
-            <Comments submissionId={item._id} comments = {item.comments} />
+            <Comments submissionId={item._id} />
           </div>
         </div>
       ))}

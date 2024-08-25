@@ -39,11 +39,17 @@ export default defineSchema({
       userId: v.id("users"),
       voteType: v.string()
     }))),
-    comments: v.optional(v.array(v.object({
-      userId: v.id("users"),
-      comment: v.string(),
-      createdAt: v.string(),
-      commentCreator: v.optional(v.string())
-    }))),
+    // comments: v.optional(v.array(v.object({
+    //   userId: v.id("users"),
+    //   comment: v.string(),
+    //   createdAt: v.string(),
+    //   commentCreator: v.optional(v.string())
+    // }))),
   }).index("by_title", ["title"]),
+  comments: defineTable({
+    submissionId: v.id("submissions"),
+    userId: v.id("users"),
+    comment: v.string(),
+    createdAt: v.string(),
+  })
 });

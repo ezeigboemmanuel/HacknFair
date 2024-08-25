@@ -8,14 +8,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Id } from "@/convex/_generated/dataModel";
 import { Ellipsis } from "lucide-react";
 
 interface CommentListProps {
   comment: string;
   name: string | undefined;
   createdAt: string;
+  setComment: (value: string) => void;
+  setEdit: (value: boolean) => void;
+  id: Id<"comments">;
+  setId: (value: Id<"comments">) => void;
 }
-const CommentList = ({ comment, name, createdAt }: CommentListProps) => {
+const CommentList = ({
+  comment,
+  name,
+  createdAt,
+  setComment,
+  setEdit,
+  setId,
+  id
+}: CommentListProps) => {
   const formatDate = (isoString: string) => {
     const date = new Date(isoString);
     return date.toLocaleDateString("en-US", {
@@ -25,6 +38,12 @@ const CommentList = ({ comment, name, createdAt }: CommentListProps) => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleEdit = () => {
+    setComment(comment);
+    setEdit(true);
+    setId(id)
   };
   return (
     <article className="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
@@ -45,7 +64,7 @@ const CommentList = ({ comment, name, createdAt }: CommentListProps) => {
             <Ellipsis />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

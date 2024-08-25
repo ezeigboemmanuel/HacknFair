@@ -10,21 +10,23 @@ import CommentList from "./comment-list";
 
 interface CommentsProps {
   submissionId: Id<"submissions">;
-  comments: {
-    userId: Id<"users">;
-    comment: string;
-    createdAt: string;
-    commentCreator?: string | undefined;
-  }[] | undefined;
 }
-const Comments = ({ submissionId, comments }: CommentsProps) => {
-  const router = useRouter()
-  const storeComments = useMutation(api.submissions.storeComments);
+const Comments = ({ submissionId }: CommentsProps) => {
+  const router = useRouter();
+  const storeComments = useMutation(api.comments.storeComments);
+  const updateComment = useMutation(api.comments.updateComment);
+  const comments = useQuery(api.comments.get);
   const [comment, setComment] = useState("");
+  const [edit, setEdit] = useState(false);
+  const [id, setId] = useState<Id<"comments">>();
   const user = useQuery(api.users.getCurrentUser);
 
   if (!user) {
     return;
+  }
+
+  if (!comments) {
+    return <div>Loading...</div>;
   }
 
   const handleComments = async () => {
@@ -33,21 +35,53 @@ const Comments = ({ submissionId, comments }: CommentsProps) => {
       submissionId: submissionId,
       comment: comment,
       createdAt: new Date().toISOString(),
-    }).then(() => {
-      toast.success("Comment submitted successfully.")
-      setComment("")
-    }).catch((error) => {
-      console.log(error)
-      toast.error("Something went wrong.")
-    });
+    })
+      .then(() => {
+        toast.success("Comment submitted successfully.");
+        setComment("");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong.");
+      });
   };
+
+  const handleEditComment = async (id: Id<"comments"> | undefined) => {
+    await updateComment({
+      id: id,
+      comment: comment,
+      createdAt: new Date().toISOString(),
+      submissionId: submissionId,
+      userId: user._id,
+    })
+      .then(() => {
+        toast.success("Comment updated successfully.");
+        setComment("");
+        setEdit(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong.");
+      });
+  };
+
   return (
     <div>
       <section className="bg-white dark:bg-gray-900 py-8 lg:py-16 antialiased">
         <div className="max-w-2xl mx-auto px-4">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
-              Comment ({comments?.length ? comments.length : "0"})
+              Comment (
+              {comments
+                ?.map((comment) => submissionId.includes(comment.submissionId))
+                .filter((item) => item === true).length
+                ? comments
+                    ?.map((comment) =>
+                      submissionId.includes(comment.submissionId)
+                    )
+                    .filter((item) => item === true).length
+                : "0"}
+              )
             </h2>
           </div>
           <div className="mb-6">
@@ -65,11 +99,35 @@ const Comments = ({ submissionId, comments }: CommentsProps) => {
                 required
               ></textarea>
             </div>
-            <Button onClick={handleComments} type="submit" variant="default">
-              Post comment
-            </Button>
+            {!edit ? (
+              <Button onClick={handleComments} type="submit" variant="default">
+                Post comment
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleEditComment(id)}
+                type="submit"
+                variant="default"
+              >
+                Edit Comment
+              </Button>
+            )}
           </div>
-          {comments?.map((comment) => <CommentList comment={comment.comment} name={comment.commentCreator} createdAt={comment.createdAt} />).reverse()}
+          {comments?.map(
+            (comment) =>
+              submissionId == comment.submissionId && (
+                <CommentList
+                  key={comment._id}
+                  id={comment._id}
+                  setId={setId}
+                  comment={comment.comment}
+                  name={comment.commentCreator?.name}
+                  createdAt={comment.createdAt}
+                  setComment={setComment}
+                  setEdit={setEdit}
+                />
+              )
+          )}
         </div>
       </section>
     </div>
