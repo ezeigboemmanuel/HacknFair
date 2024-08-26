@@ -33,18 +33,13 @@ export default defineSchema({
     format: v.string(),
     userId: v.id("users"),
     fairId: v.id("fairs"),
+    winner: v.optional(v.boolean()),
     upvotes: v.optional(v.number()), 
     downvotes: v.optional(v.number()), 
     votes: v.optional(v.array(v.object({
       userId: v.id("users"),
       voteType: v.string()
     }))),
-    // comments: v.optional(v.array(v.object({
-    //   userId: v.id("users"),
-    //   comment: v.string(),
-    //   createdAt: v.string(),
-    //   commentCreator: v.optional(v.string())
-    // }))),
   }).index("by_title", ["title"]),
   comments: defineTable({
     submissionId: v.id("submissions"),
