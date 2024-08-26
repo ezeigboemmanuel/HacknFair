@@ -10,8 +10,9 @@ import CommentList from "./comment-list";
 
 interface CommentsProps {
   submissionId: Id<"submissions">;
+  submissionUserId: Id<"users">;
 }
-const Comments = ({ submissionId }: CommentsProps) => {
+const Comments = ({ submissionId, submissionUserId }: CommentsProps) => {
   const router = useRouter();
   const storeComments = useMutation(api.comments.storeComments);
   const updateComment = useMutation(api.comments.updateComment);
@@ -126,6 +127,7 @@ const Comments = ({ submissionId }: CommentsProps) => {
                   setComment={setComment}
                   setEdit={setEdit}
                   userId={comment.userId}
+                  submissionUserId={submissionUserId}
                 />
               )
           )}

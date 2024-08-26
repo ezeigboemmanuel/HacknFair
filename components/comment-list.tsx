@@ -13,6 +13,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { Ellipsis } from "lucide-react";
 import toast from "react-hot-toast";
+import { Badge } from "./ui/badge";
 
 interface CommentListProps {
   comment: string;
@@ -23,6 +24,7 @@ interface CommentListProps {
   id: Id<"comments">;
   setId: (value: Id<"comments">) => void;
   userId: Id<"users">;
+  submissionUserId: Id<"users">;
 }
 const CommentList = ({
   comment,
@@ -32,7 +34,8 @@ const CommentList = ({
   setEdit,
   setId,
   id,
-  userId
+  userId,
+  submissionUserId
 }: CommentListProps) => {
   const deleteComment = useMutation(api.comments.deleteComment);
   const user = useQuery(api.users.getCurrentUser);
@@ -63,7 +66,7 @@ const CommentList = ({
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
           <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-            {name}
+            {name}{userId == submissionUserId && <Badge variant="default" className="ml-2">Author</Badge>}
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             <time dateTime="2022-02-08" title="February 8th, 2022">
