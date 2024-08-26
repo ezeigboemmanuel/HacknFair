@@ -70,7 +70,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           </Link>
         </p>
 
-        {user?._id == fair?.map((item) => item.judgeId)[0] && <Button>Make Winner</Button>}
+        {fair?.map((item) => item.judgeId).includes(user?._id) && <Button >Make Winner</Button>}
         {singleSubmission
           ?.map((submission) => submission.userId)
           .includes(user._id) && (
