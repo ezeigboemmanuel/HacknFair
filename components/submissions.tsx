@@ -40,6 +40,7 @@ const Submissions = ({ fairId }: { fairId: Id<"fairs">[] }) => {
                   )
                   .filter((item) => item === true).length
               }
+              winner={submission.winner}
             />
           )
       )}

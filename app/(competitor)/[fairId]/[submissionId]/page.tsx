@@ -130,7 +130,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               <p>
                 Mistake?{" "}
                 <span
-                  className="text-blue-500 underline"
+                  className="text-blue-500 underline cursor-pointer"
                   onClick={handleRemoveWinner}
                 >
                   remove winner

@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import Link from "next/link";
-import { ArrowBigDown, ArrowBigUp, MessageSquare } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp, Award, MessageSquare } from "lucide-react";
 import { AspectRatio } from "./ui/aspect-ratio";
 
 interface SubmissionCardProps {
@@ -24,6 +24,7 @@ interface SubmissionCardProps {
       }[]
     | undefined;
   commentLength: number | undefined;
+  winner: boolean;
 }
 
 const SubmissionCard = ({
@@ -38,6 +39,7 @@ const SubmissionCard = ({
   downvotes,
   votes,
   commentLength,
+  winner
 }: SubmissionCardProps) => {
   const currentUser = useQuery(api.users.getCurrentUser);
   if (!currentUser) {
@@ -46,6 +48,8 @@ const SubmissionCard = ({
   return (
     <Link href={`/${link}`}>
       <div className="relative mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
+        {winner && <Award className="absolute top-2 left-0 fill-yellow-400 stroke-black stroke-1 w-10 h-10" />}
+
         {userId === currentUser?._id && (
           <div className="absolute top-0 right-0 bg-black text-white p-1 text-sm rounded-md">
             Owner
