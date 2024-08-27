@@ -39,6 +39,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const upvote = useMutation(api.submissions.upvoteSubmission);
   const downvote = useMutation(api.submissions.downvoteSubmission);
   const makeWinner = useMutation(api.submissions.makeWinner);
+  const removeWinner = useMutation(api.submissions.removeWinner);
 
   if (!user) {
     return;
@@ -62,15 +63,30 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
     makeWinner({
       userId: user._id,
       submissionId: params.submissionId,
-    }).then(() => {
-      toast.success("Winner selected successfully.")
-    }).catch((error) => {
-      console.log(error)
-      toast.error("Something went wrong.")
-    });
+    })
+      .then(() => {
+        toast.success("Winner selected successfully.");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong.");
+      });
   };
 
-  console.log("subb", singleSubmission?.map((item) => item.winner))
+  const handleRemoveWinner = async () => {
+    removeWinner({
+      userId: user._id,
+      submissionId: params.submissionId,
+    })
+      .then(() => {
+        toast.success("Winner removed successfully.");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong.");
+      });
+  };
+
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
@@ -84,10 +100,33 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           </Link>
         </p>
 
-        {fair?.map((item) => item.judgeId).includes(user?._id) && !singleSubmission?.map((item) => item.winner)[0] && (
-          <Button onClick={handleMakeWinner}>Make Winner</Button>
+        {fair?.map((item) => item.judgeId).includes(user?._id) &&
+          !singleSubmission?.map((item) => item.winner)[0] && (
+            <Button onClick={handleMakeWinner}>Make Winner</Button>
+          )}
+        {singleSubmission?.map((item) => item.winner)[0] && (
+          <div>
+            <p>
+              Contact the winner:{" "}
+              <Link
+                href={`mailto:${singleSubmission?.map((item) => item.email)}`}
+                className="text-blue-500"
+                target="_blank"
+              >
+                {singleSubmission?.map((item) => item.email)}
+              </Link>
+            </p>
+            <p>
+              Mistake?{" "}
+              <span
+                className="text-blue-500 underline"
+                onClick={handleRemoveWinner}
+              >
+                remove winner
+              </span>
+            </p>
+          </div>
         )}
-        {singleSubmission?.map((item) => item.winner)[0] && <div><p>Contact the winner: {singleSubmission?.map((item) => item.email)}</p></div>}
         {singleSubmission
           ?.map((submission) => submission.userId)
           .includes(user._id) && (

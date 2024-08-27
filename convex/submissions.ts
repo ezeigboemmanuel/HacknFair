@@ -393,9 +393,7 @@ export const removeWinner = mutation({
       throw new Error("Submission not found");
     }
 
-    if(submission.winner){
-      return;
-    }
+    
 
     await ctx.db.patch(args.submissionId, {
       winner: false,
