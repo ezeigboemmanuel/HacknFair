@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import Submissions from "@/components/submissions";
 import MarkdownDisplay from "@/components/markdown-display";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const router = useRouter();
@@ -87,6 +88,14 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
         toast.error("Something went wrong.");
       });
   };
+
+  if (fair == undefined || singleSubmission == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-2">
