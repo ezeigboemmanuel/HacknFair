@@ -4,10 +4,18 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import SubmissionCard from "./submission-card";
 import { Id } from "@/convex/_generated/dataModel";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const Submissions = ({ fairId }: { fairId: Id<"fairs">[] }) => {
   const submissions = useQuery(api.submissions.get);
   const comments = useQuery(api.comments.get);
+  if (submissions == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-4">
       {submissions?.map(
