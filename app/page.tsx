@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "convex/react";
 import { marked } from "marked";
 import Link from "next/link";
 import { useEffect } from "react";
+import SyncLoader from "react-spinners/SyncLoader";
 
 export default function Home() {
   const store = useMutation(api.users.storeUser);
@@ -20,6 +21,13 @@ export default function Home() {
     storeUser();
   }, [store]);
 
+  if (fairs == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
+  }
 
   return (
     <main className="mx-4">

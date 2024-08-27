@@ -6,11 +6,19 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import Link from "next/link";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
   const fairs = useQuery(api.fairs.getFairsByUser, { id: params.judgeId });
   const user = useQuery(api.users.getCurrentUser);
 
+  if (fairs == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
+  }
   return (
     <div>
       <Link href={`/judge/${user?._id}/create-fair`}>
