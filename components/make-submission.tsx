@@ -66,7 +66,7 @@ const MakeSubmission = () => {
   const imageInput = useRef<HTMLInputElement>(null);
   // Creates a new editor instance with some initial content.
   const aboutEditor = useCreateBlockNote();
-  
+
   const user = useQuery(api.users.getCurrentUser);
   const fair = useQuery(api.fairs.getSingleFair, {
     id: params.fairId as Id<"fairs">,
@@ -214,7 +214,7 @@ const MakeSubmission = () => {
 
         <div className="mb-6 mt-4">
           <label className="block text-gray-800 font-semibold text-sm mb-2">
-            About the fair
+            About your project
           </label>
           <BlockNoteView
             editor={aboutEditor}

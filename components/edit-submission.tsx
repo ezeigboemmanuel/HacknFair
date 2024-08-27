@@ -17,10 +17,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import "@blocknote/core/fonts/inter.css";
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 
 const formSchema = z.object({
   title: z
@@ -39,21 +43,18 @@ const formSchema = z.object({
     .max(100, {
       message: "Email must not be longer than 100 characters.",
     }),
-  about: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
 });
 
 interface EditSubmissionProps {
   title: string;
-  about: string;
+  initialAbout: string;
   email: string;
   id: Id<"submissions">;
   fmrStorageIds: Id<"_storage">[];
 }
 const EditSubmission = ({
   title,
-  about,
+  initialAbout,
   email,
   id,
   fmrStorageIds,
@@ -63,11 +64,11 @@ const EditSubmission = ({
     defaultValues: {
       title,
       email,
-      about,
     },
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [about, setAbout] = useState<string>(initialAbout);
   const params = useParams();
   const router = useRouter();
 
@@ -75,6 +76,23 @@ const EditSubmission = ({
 
   const generateUploadUrl = useMutation(api.submissions.generateUploadUrl);
 
+  // Creates a new editor instance with some initial content.
+  const aboutEditor = useCreateBlockNote();
+
+  // For initialization; on mount, convert the initial Markdown to blocks and replace the default editor's content
+  useEffect(() => {
+    async function loadInitialHTML() {
+      const aboutBlocks = await aboutEditor.tryParseMarkdownToBlocks(about);
+      aboutEditor.replaceBlocks(aboutEditor.document, aboutBlocks);
+    }
+    loadInitialHTML();
+  }, [aboutEditor]);
+
+  const onAboutChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const about = await aboutEditor.blocksToMarkdownLossy(aboutEditor.document);
+    setAbout(about);
+  };
   const imageInput = useRef<HTMLInputElement>(null);
 
   const user = useQuery(api.users.getCurrentUser);
@@ -107,7 +125,7 @@ const EditSubmission = ({
         userId: user._id,
         fairId: fair.map((item) => item._id)[0],
         storageId: fmrStorageIds,
-        about: data.about,
+        about: about,
         format: "image",
       })
         .then(() => {
@@ -118,48 +136,48 @@ const EditSubmission = ({
           console.log(error);
           toast.error("Update fair error");
         });
-    }
+    } else {
+      const storageIds: Id<"_storage">[] = [];
+      await Promise.all(
+        selectedImages.map(async (image) => {
+          const result = await fetch(postUrl, {
+            method: "POST",
+            headers: { "Content-Type": image.type },
+            body: image,
+          });
 
-    const storageIds: Id<"_storage">[] = [];
-    await Promise.all(
-      selectedImages.map(async (image) => {
-        const result = await fetch(postUrl, {
-          method: "POST",
-          headers: { "Content-Type": image.type },
-          body: image,
+          const json = await result.json();
+
+          if (!result.ok) {
+            throw new Error(`Upload failed: ${JSON.stringify(json)}`);
+          }
+          const { storageId } = json;
+
+          storageIds.push(storageId);
+        })
+      );
+      setSelectedImages([]);
+      imageInput.current!.value = "";
+      await updateSubmission({
+        id: id,
+        title: data.title,
+        email: data.email,
+        imageUrl,
+        userId: user._id,
+        fairId: fair.map((item) => item._id)[0],
+        storageId: storageIds,
+        about: about,
+        format: "image",
+      })
+        .then(() => {
+          toast.success("Project updated successfully!");
+          router.back();
+        })
+        .catch((error) => {
+          console.log(error);
+          toast.error("You can upload only 5 images");
         });
-
-        const json = await result.json();
-
-        if (!result.ok) {
-          throw new Error(`Upload failed: ${JSON.stringify(json)}`);
-        }
-        const { storageId } = json;
-
-        storageIds.push(storageId);
-      })
-    );
-    setSelectedImages([]);
-    imageInput.current!.value = "";
-    await updateSubmission({
-      id: id,
-      title: data.title,
-      email: data.email,
-      imageUrl,
-      userId: user._id,
-      fairId: fair.map((item) => item._id)[0],
-      storageId: storageIds,
-      about: data.about,
-      format: "image",
-    })
-      .then(() => {
-        toast.success("Project updated successfully!");
-        router.back();
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("You can upload only 5 images");
-      });
+    }
   };
   return (
     <Form {...form}>
@@ -236,28 +254,17 @@ const EditSubmission = ({
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="about"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                About
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                About your project.
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
-        />
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            About your project
+          </label>
+          <BlockNoteView
+            editor={aboutEditor}
+            defaultValue={initialAbout}
+            onChange={onAboutChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
 
         <Button
           type="submit"

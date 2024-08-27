@@ -19,7 +19,7 @@ const EditPage = ({ params }: { params: { submissionId: string } }) => {
           id={item._id}
           title={item.title}
           email={item.email}
-          about={item.about}
+          initialAbout={item.about}
           fmrStorageIds={item.storageId}
         />
       ))}
