@@ -21,6 +21,10 @@ import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import "@blocknote/core/fonts/inter.css";
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 
 const formSchema = z.object({
   title: z
@@ -39,9 +43,6 @@ const formSchema = z.object({
     .max(100, {
       message: "Email must not be longer than 100 characters.",
     }),
-  about: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
 });
 
 const MakeSubmission = () => {
@@ -50,11 +51,11 @@ const MakeSubmission = () => {
     defaultValues: {
       title: "",
       email: "",
-      about: "",
     },
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
   const params = useParams();
   const router = useRouter();
 
@@ -63,7 +64,9 @@ const MakeSubmission = () => {
   const generateUploadUrl = useMutation(api.submissions.generateUploadUrl);
 
   const imageInput = useRef<HTMLInputElement>(null);
-
+  // Creates a new editor instance with some initial content.
+  const aboutEditor = useCreateBlockNote();
+  
   const user = useQuery(api.users.getCurrentUser);
   const fair = useQuery(api.fairs.getSingleFair, {
     id: params.fairId as Id<"fairs">,
@@ -73,6 +76,11 @@ const MakeSubmission = () => {
     return;
   }
 
+  const onAboutChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const about = await aboutEditor.blocksToMarkdownLossy(aboutEditor.document);
+    setAbout(about);
+  };
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setSelectedImages(Array.from(e.target.files || []));
@@ -117,7 +125,7 @@ const MakeSubmission = () => {
       userId: user._id,
       fairId: fair.map((item) => item._id)[0],
       storageId: storageIds,
-      about: data.about,
+      about: about,
       format: "image",
     })
       .then(() => {
@@ -204,28 +212,16 @@ const MakeSubmission = () => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="about"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                About
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                About your project.
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
-        />
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            About the fair
+          </label>
+          <BlockNoteView
+            editor={aboutEditor}
+            onChange={onAboutChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
 
         <Button
           type="submit"

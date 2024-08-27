@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import Submissions from "@/components/submissions";
+import MarkdownDisplay from "@/components/markdown-display";
 
 const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const router = useRouter();
@@ -173,7 +174,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
 
           <div>
             <h1 className="text-2xl font-bold my-5">{item.title}</h1>
-            <p className="">{item.about}</p>
+            <MarkdownDisplay>{item.about}</MarkdownDisplay>
 
             <div className="flex space-x-2 text-gray-600 my-4">
               <div className="flex">
