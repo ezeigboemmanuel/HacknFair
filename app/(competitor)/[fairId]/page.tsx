@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AboutFair from "@/components/about-fair";
 import Submissions from "@/components/submissions";
 import toast from "react-hot-toast";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
@@ -18,7 +19,9 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   });
   const router = useRouter();
 
-  const submissions = useQuery(api.submissions.getSubmissionsByFair, {id: params.fairId});
+  const submissions = useQuery(api.submissions.getSubmissionsByFair, {
+    id: params.fairId,
+  });
 
   // if (user?._id === fair?.map((item) => item.judgeId)[0]) {
   //   redirect(`/judge/${fair?.map((item) => item.judgeId)[0]}/${params.fairId}`);
@@ -27,12 +30,16 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const deleteFair = useMutation(api.fairs.deleteFair);
   const onDelete = async () => {
     deleteFair({ id: params.fairId as Id<"fairs"> });
-    toast.success("Fair deleted successfully.")
+    toast.success("Fair deleted successfully.");
     router.back();
   };
 
-  if(submissions == undefined){
-    return <div>loading...</div>
+  if (submissions == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
   }
   return (
     <div className="max-w-5xl mx-auto px-4">
@@ -71,7 +78,9 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
       <Tabs defaultValue="about">
         <TabsList>
           <TabsTrigger value="about">About</TabsTrigger>
-          <TabsTrigger value="submissions">Submissions ({`${submissions?.length}`})</TabsTrigger>
+          <TabsTrigger value="submissions">
+            Submissions ({`${submissions?.length}`})
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="about">
           {fair?.map((item) => (
