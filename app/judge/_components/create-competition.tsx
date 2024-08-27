@@ -20,6 +20,10 @@ import { FormEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
+import "@blocknote/core/fonts/inter.css";
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 
 const formSchema = z.object({
   title: z
@@ -76,6 +80,33 @@ const CreateCompetition = () => {
 
   const user = useQuery(api.users.getCurrentUser);
 
+  const [markdown, setMarkdown] = useState<string>("");
+
+  // Creates a new editor instance with some initial content.
+  const editor = useCreateBlockNote({
+    initialContent: [
+      {
+        type: "paragraph",
+        content: [
+          "Hello, ",
+          {
+            type: "text",
+            text: "world!",
+            styles: {
+              bold: true,
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  const onChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const markdown = await editor.blocksToMarkdownLossy(editor.document);
+    setMarkdown(markdown);
+  };
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedImages(Array.from(e.target.files || []));
     const file = e.target.files?.[0];
@@ -112,7 +143,7 @@ const CreateCompetition = () => {
           subtitle: data.subtitle,
           imageUrl,
           storageId,
-          about: data.about,
+          about: markdown,
           deadline,
           requirements: data.requirements,
           prices: data.prices,
@@ -213,28 +244,31 @@ const CreateCompetition = () => {
             className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
           />
         </div>
-
+        <BlockNoteView editor={editor} onChange={onChange} />
         <FormField
           control={form.control}
           name="about"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                About
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                About the fair.
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            return (
+              <FormItem className="mt-4">
+                <FormLabel className="text-gray-800 font-semibold">
+                  About
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="I will do something amazing"
+                    {...field}
+                    className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
+                  />
+                  
+                </FormControl>
+                <FormDescription className="text-gray-500 mt-1">
+                  About the fair.
+                </FormDescription>
+                <FormMessage className="text-red-500 mt-1" />
+              </FormItem>
+            );
+          }}
         />
 
         <FormField

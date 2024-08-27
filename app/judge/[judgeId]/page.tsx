@@ -1,5 +1,6 @@
 "use client";
 
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -20,7 +21,13 @@ const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
         {fairs?.map((fair) => (
           <Link key={fair._id} href={`/${fair._id}`}>
             <div className="mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
-              <img className="rounded-t-lg" src={fair.imageUrl} alt="" />
+              <AspectRatio ratio={16 / 12}>
+                <img
+                  className="rounded-t-lg object-cover w-full h-full"
+                  src={fair.imageUrl}
+                  alt=""
+                />
+              </AspectRatio>
               <div className="p-5">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                   {fair.title}
