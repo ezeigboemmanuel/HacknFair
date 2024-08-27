@@ -379,11 +379,7 @@ export const makeWinner = mutation({
     }
 
     await ctx.db.patch(args.submissionId, {
-      downvotes: submission.downvotes + 1,
-      votes: [
-        ...submission.votes,
-        { userId: args.userId, voteType: "downvote" },
-      ],
+      winner: true,
     });
   },
 });
