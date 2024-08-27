@@ -42,18 +42,6 @@ const formSchema = z.object({
     .max(100, {
       message: "Title must not be longer than 100 characters.",
     }),
-  about: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
-  requirements: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
-  prices: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
-  judgingCriteria: z.string().min(5, {
-    message: "Title must be at least 5 characters.",
-  }),
 });
 
 const CreateCompetition = () => {
@@ -62,10 +50,6 @@ const CreateCompetition = () => {
     defaultValues: {
       title: "",
       subtitle: "",
-      about: "",
-      requirements: "",
-      prices: "",
-      judgingCriteria: "",
     },
   });
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -80,31 +64,41 @@ const CreateCompetition = () => {
 
   const user = useQuery(api.users.getCurrentUser);
 
-  const [markdown, setMarkdown] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
+  const [req, setReq] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [judcri, setJudcri] = useState<string>("");
 
   // Creates a new editor instance with some initial content.
-  const editor = useCreateBlockNote({
-    initialContent: [
-      {
-        type: "paragraph",
-        content: [
-          "Hello, ",
-          {
-            type: "text",
-            text: "world!",
-            styles: {
-              bold: true,
-            },
-          },
-        ],
-      },
-    ],
-  });
+  const aboutEditor = useCreateBlockNote();
+  const reqEditor = useCreateBlockNote();
+  const priceEditor = useCreateBlockNote();
+  const judcriEditor = useCreateBlockNote();
 
-  const onChange = async () => {
+  const onAboutChange = async () => {
     // Converts the editor's contents from Block objects to Markdown and store to state.
-    const markdown = await editor.blocksToMarkdownLossy(editor.document);
-    setMarkdown(markdown);
+    const about = await aboutEditor.blocksToMarkdownLossy(aboutEditor.document);
+    setAbout(about);
+  };
+
+  const onReqChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const req = await reqEditor.blocksToMarkdownLossy(reqEditor.document);
+    setReq(req);
+  };
+
+  const onPricesChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const price = await priceEditor.blocksToMarkdownLossy(priceEditor.document);
+    setPrice(price);
+  };
+
+  const onJudcriChange = async () => {
+    // Converts the editor's contents from Block objects to Markdown and store to state.
+    const judcri = await judcriEditor.blocksToMarkdownLossy(
+      judcriEditor.document
+    );
+    setJudcri(judcri);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,11 +137,11 @@ const CreateCompetition = () => {
           subtitle: data.subtitle,
           imageUrl,
           storageId,
-          about: markdown,
+          about: about,
           deadline,
-          requirements: data.requirements,
-          prices: data.prices,
-          judgingCriteria: data.judgingCriteria,
+          requirements: req,
+          prices: price,
+          judgingCriteria: judcri,
           format: "image",
         })
           .then(() => {
@@ -158,8 +152,11 @@ const CreateCompetition = () => {
             console.log(error);
             toast.error("Create fair error");
           });
+          console.log("in promise")
       })
+      
     );
+    console.log("clicked")
   };
   return (
     <Form {...form}>
@@ -236,7 +233,9 @@ const CreateCompetition = () => {
         />
 
         <div className="mb-6 mt-4">
-          <label className="block text-gray-800 font-semibold">Deadline</label>
+          <label className="block text-gray-800 font-semibold text-sm">
+            Deadline
+          </label>
           <input
             type="date"
             value={deadline}
@@ -244,101 +243,50 @@ const CreateCompetition = () => {
             className="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
           />
         </div>
-        <BlockNoteView editor={editor} onChange={onChange} />
-        <FormField
-          control={form.control}
-          name="about"
-          render={({ field }) => {
-            return (
-              <FormItem className="mt-4">
-                <FormLabel className="text-gray-800 font-semibold">
-                  About
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="I will do something amazing"
-                    {...field}
-                    className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                  />
-                  
-                </FormControl>
-                <FormDescription className="text-gray-500 mt-1">
-                  About the fair.
-                </FormDescription>
-                <FormMessage className="text-red-500 mt-1" />
-              </FormItem>
-            );
-          }}
-        />
 
-        <FormField
-          control={form.control}
-          name="requirements"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                Requirements
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter the requirements.
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
-        />
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            About the fair
+          </label>
+          <BlockNoteView
+            editor={aboutEditor}
+            onChange={onAboutChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="prices"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                Prices
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter the prices.
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
-        />
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            Requirements
+          </label>
+          <BlockNoteView
+            editor={reqEditor}
+            onChange={onReqChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
 
-        <FormField
-          control={form.control}
-          name="judgingCriteria"
-          render={({ field }) => (
-            <FormItem className="mt-4">
-              <FormLabel className="text-gray-800 font-semibold">
-                Judging Criteria
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="I will do something amazing"
-                  {...field}
-                  className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
-                />
-              </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter the judging criteria
-              </FormDescription>
-              <FormMessage className="text-red-500 mt-1" />
-            </FormItem>
-          )}
-        />
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            Prices
+          </label>
+          <BlockNoteView
+            editor={priceEditor}
+            onChange={onPricesChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
+
+        <div className="mb-6 mt-4">
+          <label className="block text-gray-800 font-semibold text-sm mb-2">
+            Judging Criteria
+          </label>
+          <BlockNoteView
+            editor={judcriEditor}
+            onChange={onJudcriChange}
+            className="border rounded-lg py-4"
+          />
+        </div>
 
         <Button
           type="submit"

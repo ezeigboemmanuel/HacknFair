@@ -18,10 +18,10 @@ const EditPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           title={item.title}
           subtitle={item.subtitle}
           initialDeadline={item.deadline!}
-          about={item.about}
-          requirements={item.requirements}
-          prices={item.prices}
-          judgingCriteria={item.judgingCriteria}
+          initialAbout={item.about!}
+          initialRequirements={item.requirements!}
+          initialPrices={item.prices!}
+          initialJudgingCriteria={item.judgingCriteria!}
           imageURL={item.imageUrl}
           fairId={params.fairId}
           fmrStorageId={item.storageId}
