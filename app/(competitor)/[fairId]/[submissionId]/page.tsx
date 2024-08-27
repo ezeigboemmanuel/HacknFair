@@ -69,6 +69,8 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
       toast.error("Something went wrong.")
     });
   };
+
+  console.log("subb", singleSubmission?.map((item) => item.winner))
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
@@ -82,9 +84,10 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           </Link>
         </p>
 
-        {fair?.map((item) => item.judgeId).includes(user?._id) && (
+        {fair?.map((item) => item.judgeId).includes(user?._id) && !singleSubmission?.map((item) => item.winner)[0] && (
           <Button onClick={handleMakeWinner}>Make Winner</Button>
         )}
+        {singleSubmission?.map((item) => item.winner)[0] && <div><p>Contact the winner: {singleSubmission?.map((item) => item.email)}</p></div>}
         {singleSubmission
           ?.map((submission) => submission.userId)
           .includes(user._id) && (

@@ -383,3 +383,22 @@ export const makeWinner = mutation({
     });
   },
 });
+
+
+export const removeWinner = mutation({
+  args: { submissionId: v.id("submissions"), userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const submission = await ctx.db.get(args.submissionId);
+    if (!submission) {
+      throw new Error("Submission not found");
+    }
+
+    if(submission.winner){
+      return;
+    }
+
+    await ctx.db.patch(args.submissionId, {
+      winner: false,
+    });
+  },
+});

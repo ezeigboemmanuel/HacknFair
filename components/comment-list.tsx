@@ -65,9 +65,9 @@ const CommentList = ({
     <article className="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
       <footer className="flex justify-between items-center mb-2">
         <div className="flex items-center">
-          <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
+          <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
             {name}{userId == submissionUserId && <Badge variant="default" className="ml-2">Author</Badge>}
-          </p>
+          </div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             <time dateTime="2022-02-08" title="February 8th, 2022">
               {formatDate(createdAt)}
