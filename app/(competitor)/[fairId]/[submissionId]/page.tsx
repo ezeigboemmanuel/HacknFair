@@ -38,6 +38,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   };
   const upvote = useMutation(api.submissions.upvoteSubmission);
   const downvote = useMutation(api.submissions.downvoteSubmission);
+  const makeWinner = useMutation(api.submissions.makeWinner);
 
   if (!user) {
     return;
@@ -57,6 +58,17 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
     });
   };
 
+  const handleMakeWinner = async () => {
+    makeWinner({
+      userId: user._id,
+      submissionId: params.submissionId,
+    }).then(() => {
+      toast.success("Winner selected successfully.")
+    }).catch((error) => {
+      console.log(error)
+      toast.error("Something went wrong.")
+    });
+  };
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
@@ -70,7 +82,9 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           </Link>
         </p>
 
-        {fair?.map((item) => item.judgeId).includes(user?._id) && <Button >Make Winner</Button>}
+        {fair?.map((item) => item.judgeId).includes(user?._id) && (
+          <Button onClick={handleMakeWinner}>Make Winner</Button>
+        )}
         {singleSubmission
           ?.map((submission) => submission.userId)
           .includes(user._id) && (
