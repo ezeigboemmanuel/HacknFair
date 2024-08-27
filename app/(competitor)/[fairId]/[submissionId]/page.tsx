@@ -104,47 +104,56 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           !singleSubmission?.map((item) => item.winner)[0] && (
             <Button onClick={handleMakeWinner}>Make Winner</Button>
           )}
-        {singleSubmission?.map((item) => item.winner)[0] && (
-          <div>
-            <p>
-              Contact the winner:{" "}
-              <Link
-                href={`mailto:${singleSubmission?.map((item) => item.email)}`}
-                className="text-blue-500"
-                target="_blank"
-              >
-                {singleSubmission?.map((item) => item.email)}
-              </Link>
-            </p>
-            <p>
-              Mistake?{" "}
-              <span
-                className="text-blue-500 underline"
-                onClick={handleRemoveWinner}
-              >
-                remove winner
-              </span>
-            </p>
-          </div>
-        )}
+        {fair?.map((item) => item.judgeId).includes(user?._id) &&
+          singleSubmission?.map((item) => item.winner)[0] && (
+            <div>
+              <p>
+                Contact the winner:{" "}
+                <Link
+                  href={`mailto:${singleSubmission?.map((item) => item.email)}`}
+                  className="text-blue-500"
+                  target="_blank"
+                >
+                  {singleSubmission?.map((item) => item.email)}
+                </Link>
+              </p>
+              <p>
+                Mistake?{" "}
+                <span
+                  className="text-blue-500 underline"
+                  onClick={handleRemoveWinner}
+                >
+                  remove winner
+                </span>
+              </p>
+            </div>
+          )}
+        {!fair?.map((item) => item.judgeId).includes(user?._id) &&
+          (singleSubmission?.map((item) => item.userId).includes(user?._id) &&
+          singleSubmission?.map((item) => item.winner)[0] ? (
+            <div>You won! The organisers would contact you via email.</div>
+          ) : (
+            singleSubmission?.map((item) => item.winner)[0] && <div>Winner</div>
+          ))}
         {singleSubmission
           ?.map((submission) => submission.userId)
-          .includes(user._id) && (
-          <div className="flex space-x-3 justify-end">
-            <Button
-              onClick={() => {
-                router.push(
-                  `/${fair?.map((item) => item._id)}/edit-submission/${singleSubmission?.map((item) => item._id)}`
-                );
-              }}
-            >
-              Edit
-            </Button>
-            <Button variant="destructive" onClick={onDelete}>
-              Delete
-            </Button>
-          </div>
-        )}
+          .includes(user._id) &&
+          !singleSubmission?.map((item) => item.winner)[0] && (
+            <div className="flex space-x-3 justify-end">
+              <Button
+                onClick={() => {
+                  router.push(
+                    `/${fair?.map((item) => item._id)}/edit-submission/${singleSubmission?.map((item) => item._id)}`
+                  );
+                }}
+              >
+                Edit
+              </Button>
+              <Button variant="destructive" onClick={onDelete}>
+                Delete
+              </Button>
+            </div>
+          )}
       </div>
       {singleSubmission?.map((item) => (
         <div key={item._id} className="max-w-4xl mx-auto">
