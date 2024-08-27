@@ -24,7 +24,7 @@ interface SubmissionCardProps {
       }[]
     | undefined;
   commentLength: number | undefined;
-  winner: boolean;
+  winner: boolean | undefined;
 }
 
 const SubmissionCard = ({
