@@ -6,6 +6,7 @@ import AboutImg from "@/assets/aboutimg.jpg";
 import { Button } from "../ui/button";
 import { SignInButton } from "@clerk/nextjs";
 import ServiceCard from "./ServiceCard";
+import Footer from "./Footer";
 
 const Home = () => {
   return (
@@ -81,6 +82,13 @@ const Home = () => {
         <div className="pt-10">
             <ServiceCard />
         </div>
+      </div>
+
+
+      {/* ====== FOOTER ======= */}
+
+      <div>
+        <Footer />
       </div>
     </div>
   );
