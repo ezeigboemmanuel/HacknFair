@@ -74,16 +74,25 @@ const Home = () => {
       {/* ========= SERVICES =========== */}
 
       <div className="bg-[#EEF1EF] py-10 md:py-20 px-4 md:px-16 lg:px-20">
-        <div><p className="uppercase text-[#4EB645] font-bold">Our services</p>
-        <p className="uppercase font-bold text-lg mt-2">
-          Creating a platform for success
-        </p></div>
-        
-        <div className="pt-10">
-            <ServiceCard />
+        <div>
+          <p className="uppercase text-[#4EB645] font-bold">Our services</p>
+          <p className="uppercase font-bold text-lg mt-2">
+            Creating a platform for success
+          </p>
+        </div>
+
+        <div className="pt-10 flex flex-col justify-center items-center">
+          <ServiceCard />
+
+          <p className="uppercase font-bold text-lg mt-10">Get Started</p>
+
+          <SignInButton>
+            <Button className="bg-[#4EB645] hover:bg-[#60e454] text-base rounded-none w-full md:max-w-[250px] mt-2">
+              Sign In
+            </Button>
+          </SignInButton>
         </div>
       </div>
-
 
       {/* ====== FOOTER ======= */}
 
