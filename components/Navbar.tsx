@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   return (
     <div className="px-2 max-w-[1400px] mx-auto">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between py-8 lg:py-4">
         <Link
           href="/"
           className="font-semibold font-serif md:text-md lg:text-lg"

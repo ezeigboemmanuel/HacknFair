@@ -18,10 +18,10 @@ const Home = () => {
           />
         </div>
 
-        <div className="text-white h-full flex flex-col justify-center px-3">
-          <h1 className="text-4xl pb-5 font-bold">HacknFair</h1>
+        <div className="text-white h-full flex flex-col justify-center px-3 lg:px-10">
+          <h1 className="text-4xl pb-5 font-bold md:text-5xl lg:text-6xl">HacknFair</h1>
 
-          <p className="pr-2">
+          <p className="pr-2 md:text-md lg:text-lg">
             Host science fair campaigns and showcase innovative student
             submissions
           </p>
@@ -32,6 +32,11 @@ const Home = () => {
             </Button>
           </SignInButton>
         </div>
+      </div>
+
+
+      <div>
+        
       </div>
     </div>
   );
