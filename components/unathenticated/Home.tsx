@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <div className="max-w-[1400px] mx-auto mt-20 md:mt-24 lg:mt-28">
       <div className="relative w-full h-[75vh] bg-cover bg-center bg-no-repeat">
-        <div className="absolute inset-0 -z-10">
+        <div className="fixed inset-0 -z-10">
           <Image
             src={HomeImg}
             fill
@@ -38,7 +38,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="px-4 md:px-16 lg:px-20 py-10 md:py-16 flex flex-col md:flex-row md:space-x-12 items-center">
+      <div className="bg-white px-4 md:px-16 lg:px-20 py-10 md:py-16 flex flex-col md:flex-row md:space-x-12 items-center">
         <div>
           <p className="uppercase text-[#4EB645] font-bold">
             Empowering young minds
