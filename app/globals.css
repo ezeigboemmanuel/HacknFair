@@ -87,3 +87,9 @@
   justify-content: space-evenly;
   align-items: center;
 }
+
+/* For my styles */
+
+.text-green {
+  color: #4eb645;
+}
