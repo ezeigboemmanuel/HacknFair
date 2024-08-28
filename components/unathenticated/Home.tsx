@@ -5,10 +5,11 @@ import HomeImg from "@/assets/homeimg.jpg";
 import AboutImg from "@/assets/aboutimg.jpg";
 import { Button } from "../ui/button";
 import { SignInButton } from "@clerk/nextjs";
+import ServiceCard from "./ServiceCard";
 
 const Home = () => {
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <div className="max-w-[1400px] mx-auto mt-20 md:mt-24 lg:mt-28">
       <div className="relative w-full h-[75vh] bg-cover bg-center bg-no-repeat">
         <div className="absolute inset-0 -z-10">
           <Image
@@ -19,7 +20,7 @@ const Home = () => {
           />
         </div>
 
-        <div className="text-white h-full flex flex-col justify-center px-3 lg:px-10">
+        <div className="text-white h-full flex flex-col justify-center px-3 lg:px-20">
           <h1 className="text-4xl pb-5 font-bold md:text-5xl lg:text-6xl">
             HacknFair
           </h1>
@@ -37,12 +38,12 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="px-3">
+      <div className="px-4 md:px-16 lg:px-20 py-10 md:py-16 flex flex-col md:flex-row md:space-x-12 items-center">
         <div>
-          <p className="uppercase text-[#4EB645] font-bold mt-6">
+          <p className="uppercase text-[#4EB645] font-bold">
             Empowering young minds
           </p>
-          <p className="uppercase font-bold text-lg mt-2">
+          <p className="uppercase font-bold text-lg md:text-xl mt-2">
             Join us in celebrating innovation
           </p>
           <p className="mt-2">
@@ -61,7 +62,24 @@ const Home = () => {
           </p>
         </div>
         <div className="mt-7">
-            <Image src={AboutImg} alt="about" className="object-cover object-center" />
+          <Image
+            src={AboutImg}
+            alt="about"
+            className="object-cover object-center"
+          />
+        </div>
+      </div>
+
+      {/* ========= SERVICES =========== */}
+
+      <div className="bg-[#EEF1EF] py-10 md:py-20 px-4 md:px-16 lg:px-20">
+        <div><p className="uppercase text-[#4EB645] font-bold">Our services</p>
+        <p className="uppercase font-bold text-lg mt-2">
+          Creating a platform for success
+        </p></div>
+        
+        <div className="pt-10">
+            <ServiceCard />
         </div>
       </div>
     </div>

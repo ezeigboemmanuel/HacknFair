@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   return (
-    <div className="px-2 max-w-[1400px] mx-auto">
+    <div className="px-2 md:px-10 max-w-[1400px] mx-auto fixed w-full bg-white z-50 top-0 left-0 right-0">
       <div className="flex items-center justify-between py-8 lg:py-4">
         <Link href="/" className="font-semibold font-serif md:text-lg">
           Hack<span className="text-[#4EB645]">n</span>Fair

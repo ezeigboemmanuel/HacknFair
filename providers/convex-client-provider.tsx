@@ -25,7 +25,7 @@ export function ConvexClientProvider({ children }: ConvexClientProviderProps) {
     <ClerkProvider>
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
         <Unauthenticated>
-          <div className="">
+          <div className="relative">
             <Navbar />
             <Home />
           </div>
