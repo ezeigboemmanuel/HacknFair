@@ -9,6 +9,8 @@ import {
   ConvexReactClient,
   Unauthenticated,
 } from "convex/react";
+import Navbar from "@/components/unathenticated/Navbar";
+import Home from "@/components/unathenticated/Home";
 
 interface ConvexClientProviderProps {
   children: React.ReactNode;
@@ -23,7 +25,10 @@ export function ConvexClientProvider({ children }: ConvexClientProviderProps) {
     <ClerkProvider>
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
         <Unauthenticated>
-          <SignInButton />
+          <div className="max-w-6xl mx-auto">
+            <Navbar />
+            <Home />
+          </div>
         </Unauthenticated>
         <Authenticated>{children}</Authenticated>
       </ConvexProviderWithClerk>
