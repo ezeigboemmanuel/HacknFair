@@ -33,15 +33,22 @@ const Navbar = () => {
                 <Link href="/" className="hover:text-[#4EB645] font-[500]">
                   Home
                 </Link>
-                <Link href="/fairs" className="hover:text-[#4EB645] font-[500]">
-                  Fairs
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className="hover:text-[#4EB645] font-[500]"
-                >
-                  Dashboard
-                </Link>
+                <SignInButton>
+                  <Link
+                    href="/fairs"
+                    className="hover:text-[#4EB645] font-[500]"
+                  >
+                    Fairs
+                  </Link>
+                </SignInButton>
+                <SignInButton>
+                  <Link
+                    href="/dashboard"
+                    className="hover:text-[#4EB645] font-[500]"
+                  >
+                    Dashboard
+                  </Link>
+                </SignInButton>
                 <Link href="/about" className="hover:text-[#4EB645] font-[500]">
                   About
                 </Link>
@@ -56,10 +63,25 @@ const Navbar = () => {
 
           <div className="hidden lg:flex justify-between items-center py-6 px-4">
             <div className="flex space-x-5 items-center">
-              <Link href="/" className="hover:text-[#4EB645] font-[500]">Home</Link>
-              <Link href="/fairs" className="hover:text-[#4EB645] font-[500]">Fairs</Link>
-              <Link href="/dashboard" className="hover:text-[#4EB645] font-[500]">Dashboard</Link>
-              <Link href="/about" className="hover:text-[#4EB645] font-[500]">About</Link>
+              <Link href="/" className="hover:text-[#4EB645] font-[500]">
+                Home
+              </Link>
+              <SignInButton>
+                <Link href="/fairs" className="hover:text-[#4EB645] font-[500]">
+                  Fairs
+                </Link>
+              </SignInButton>
+              <SignInButton>
+                <Link
+                  href="/dashboard"
+                  className="hover:text-[#4EB645] font-[500]"
+                >
+                  Dashboard
+                </Link>
+              </SignInButton>
+              <Link href="/about" className="hover:text-[#4EB645] font-[500]">
+                About
+              </Link>
               <SignInButton>
                 <Button className="bg-[#4EB645] hover:bg-[#60e454] w-full text-base">
                   Sign In
