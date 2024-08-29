@@ -39,7 +39,7 @@ const Navbar = () => {
                   Fairs
                 </Link>
                 <Link
-                  href="/judge"
+                  href="/dashboard"
                   className="hover:text-[#4EB645] font-[500]"
                 >
                   Dashboard
@@ -60,7 +60,7 @@ const Navbar = () => {
                 Fairs
               </Link>
               <Link
-                href="/dashboard"
+                href="/judge"
                 className="hover:text-[#4EB645] font-[500]"
               >
                 Dashboard
