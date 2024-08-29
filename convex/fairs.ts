@@ -46,7 +46,9 @@ export const storeFair = mutation({
 });
 
 export const get = query({
-  handler: async (ctx) => {
+  args: { search: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    const title = args.search as string;
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Unauthorized");
@@ -61,9 +63,16 @@ export const get = query({
     if (user === null) {
       return;
     }
+    let fairs = [];
 
-    const fairs = await ctx.db.query("fairs").order("desc").collect();
-
+    if (title) {
+      fairs = await ctx.db
+        .query("fairs")
+        .withSearchIndex("search_title", (q) => q.search("title", title))
+        .collect();
+    } else {
+      fairs = await ctx.db.query("fairs").order("desc").collect();
+    }
     const fairsWithImages = await Promise.all(
       fairs.map(async (fair) => {
         const imageUrl = await ctx.storage.getUrl(fair.storageId);

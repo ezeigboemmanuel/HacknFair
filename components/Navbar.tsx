@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -13,10 +14,15 @@ const Navbar = () => {
         <Link href="/" className="font-semibold font-serif md:text-lg">
           Hack<span className="text-[#4EB645]">n</span>Fair
         </Link>
+        <div className="flex-1">
+          <SearchBar />
+        </div>
         <nav>
           <section className="flex lg:hidden">
-            <div className="pr-2"><UserButton /></div>
-            
+            <div className="pr-2">
+              <UserButton />
+            </div>
+
             <div
               className="space-y-2 pr-2"
               onClick={() => setIsNavOpen((prev) => !prev)}

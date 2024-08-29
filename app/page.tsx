@@ -9,10 +9,15 @@ import Link from "next/link";
 import { useEffect } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
 
-export default function Home() {
+interface HomeProps {
+  searchParams: {
+    search: string;
+  };
+}
+export default function Home({ searchParams }: HomeProps) {
   const store = useMutation(api.users.storeUser);
   const user = useQuery(api.users.getCurrentUser);
-  const fairs = useQuery(api.fairs.get);
+  const fairs = useQuery(api.fairs.get, { search: searchParams.search });
 
   useEffect(() => {
     const storeUser = async () => {
@@ -36,9 +41,7 @@ export default function Home() {
         <Button className="my-10">Become an organizer</Button>
       </Link> */}
 
-      <div>
-        <SearchBar />
-      </div>
+      
 
       <br />
       {fairs?.length === 0 && <p>No fair found.</p>}
@@ -51,8 +54,8 @@ export default function Home() {
               title={fair.title}
               subtitle={fair.subtitle}
               deadline={fair.deadline}
-              userId = {user?._id}
-              judgeId = {fair.judgeId}
+              userId={user?._id}
+              judgeId={fair.judgeId}
             />
           </div>
         ))}
