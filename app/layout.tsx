@@ -24,7 +24,10 @@ export default function RootLayout({
         <ToastProvider />
         <ConvexClientProvider>
           <Navbar />
-          {children}
+          <div className="mt-28">
+            {children}
+          </div>
+          
         </ConvexClientProvider>
       </body>
     </html>

@@ -1,5 +1,6 @@
 "use client";
 import FairCard from "@/components/fair-card";
+import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
@@ -31,13 +32,17 @@ export default function Home() {
 
   return (
     <main className="mx-4">
-      <Link href={`/judge/${user?._id}`}>
+      {/* <Link href={`/judge/${user?._id}`}>
         <Button className="my-10">Become an organizer</Button>
-      </Link>
+      </Link> */}
+
+      <div>
+        <SearchBar />
+      </div>
 
       <br />
       {fairs?.length === 0 && <p>No fair found.</p>}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 w-full">
         {fairs?.map((fair) => (
           <div key={fair._id}>
             <FairCard

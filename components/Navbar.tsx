@@ -3,17 +3,20 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   return (
-    <div className="px-2 max-w-[1400px] mx-auto">
+    <div className="px-4 md:px-10 max-w-[1400px] mx-auto fixed w-full bg-white z-50 top-0 left-0 right-0 shadow-sm">
       <div className="flex items-center justify-between py-8 lg:py-4">
         <Link href="/" className="font-semibold font-serif md:text-lg">
           Hack<span className="text-[#4EB645]">n</span>Fair
         </Link>
         <nav>
           <section className="flex lg:hidden">
+            <div className="pr-2"><UserButton /></div>
+            
             <div
               className="space-y-2 pr-2"
               onClick={() => setIsNavOpen((prev) => !prev)}
@@ -44,9 +47,6 @@ const Navbar = () => {
                 <Link href="/about" className="hover:text-[#4EB645] font-[500]">
                   About
                 </Link>
-                <Button className="bg-[#4EB645] hover:bg-[#60e454] w-full text-base">
-                  Create Fair?
-                </Button>
               </div>
             </div>
           </section>
@@ -68,9 +68,8 @@ const Navbar = () => {
               <Link href="/about" className="hover:text-[#4EB645] font-[500]">
                 About
               </Link>
-              <Button className="bg-[#4EB645] hover:bg-[#60e454] w-full text-base">
-                Create Fair?
-              </Button>
+
+              <UserButton />
             </div>
           </div>
         </nav>

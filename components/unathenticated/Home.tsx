@@ -17,7 +17,7 @@ const Home = () => {
             src={HomeImg}
             fill
             alt="banner-img"
-            className="object-cover object-center brightness-50"
+            className="object-cover object-center brightness-50 max-w-[1400px] mx-auto"
           />
         </div>
 
@@ -66,7 +66,7 @@ const Home = () => {
           <Image
             src={AboutImg}
             alt="about"
-            className="object-cover object-center"
+            className="object-cover object-center "
           />
         </div>
       </div>
