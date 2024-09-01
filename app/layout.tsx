@@ -5,6 +5,7 @@ import "./globals.css";
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import ToastProvider from "@/providers/toastProvider";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -27,7 +28,7 @@ export default function RootLayout({
           <div className="mt-28">
             {children}
           </div>
-          
+          <Footer />
         </ConvexClientProvider>
       </body>
     </html>

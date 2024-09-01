@@ -36,7 +36,7 @@ export default function Home({ searchParams }: HomeProps) {
   }
 
   return (
-    <main className="mx-4">
+    <main className="mx-4 mb-10">
       {/* <Link href={`/judge/${user?._id}`}>
         <Button className="my-10">Become an organizer</Button>
       </Link> */}
