@@ -21,9 +21,9 @@ const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
   }
   return (
     <div>
-      <Link href={`/judge/${user?._id}/create-fair`}>
+      {/* <Link href={`/judge/${user?._id}/create-fair`}>
         <Button className="m-10">Create fair</Button>
-      </Link>
+      </Link> */}
       {fairs?.length === 0 && <p>No fair found.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
         {fairs?.map((fair) => (

@@ -25,7 +25,8 @@ export default function FairPage({
   }
 
   return (
-    <main className="mx-4">
+    <main className="mx-4 mb-10">
+       <br />
       {fairs?.length === 0 && <p>No fair found.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-5">
         {fairs?.map((fair) => (
