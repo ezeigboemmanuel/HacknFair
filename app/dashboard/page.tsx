@@ -100,7 +100,7 @@ const page = () => {
                   <p className="text-xl font-semibold mt-3">
                     You don't have any submission
                   </p>
-                  <Link href="/fairs">
+                  <Link href="/">
                     <p className="text-green">Go to fairs</p>
                   </Link>
                 </div>

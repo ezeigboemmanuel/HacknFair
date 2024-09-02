@@ -104,7 +104,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           Submitted to:{" "}
           <Link
             href={`/${fair?.map((item) => item._id)[0]}`}
-            className="text-blue-500"
+            className="text-green"
           >
             {fair?.map((item) => item.title)[0]}
           </Link>

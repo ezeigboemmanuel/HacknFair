@@ -11,6 +11,7 @@ import {
 } from "convex/react";
 import Navbar from "@/components/unathenticated/Navbar";
 import Home from "@/components/unathenticated/Home";
+import SyncLoader from "react-spinners/SyncLoader";
 
 interface ConvexClientProviderProps {
   children: React.ReactNode;
@@ -24,6 +25,12 @@ export function ConvexClientProvider({ children }: ConvexClientProviderProps) {
   return (
     <ClerkProvider>
       <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
+        <AuthLoading>
+          <div className="h-[100vh] w-full flex justify-center items-center">
+            <SyncLoader />
+          </div>
+        </AuthLoading>
+
         <Unauthenticated>
           <div className="relative">
             <Navbar />

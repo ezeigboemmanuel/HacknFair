@@ -30,12 +30,9 @@ const Navbar = () => {
                 <X />
               </div>
               <div className="flex flex-col items-center justify-between min-h-[250px] w-full px-3 uppercase">
-                <Link href="/" className="hover:text-[#4EB645] font-[500]">
-                  Home
-                </Link>
                 <SignInButton>
                   <Link
-                    href="/fairs"
+                    href="/"
                     className="hover:text-[#4EB645] font-[500]"
                   >
                     Fairs
@@ -63,11 +60,8 @@ const Navbar = () => {
 
           <div className="hidden lg:flex justify-between items-center py-6 px-4">
             <div className="flex space-x-5 items-center">
-              <Link href="/" className="hover:text-[#4EB645] font-[500]">
-                Home
-              </Link>
               <SignInButton>
-                <Link href="/fairs" className="hover:text-[#4EB645] font-[500]">
+                <Link href="/" className="hover:text-[#4EB645] font-[500]">
                   Fairs
                 </Link>
               </SignInButton>

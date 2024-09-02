@@ -36,12 +36,10 @@ export default function Home({ searchParams }: HomeProps) {
   }
 
   return (
-    <main className="mx-4 mb-10">
-      {/* <Link href={`/judge/${user?._id}`}>
-        <Button className="my-10">Become an organizer</Button>
-      </Link> */}
-
-      
+    <main className="mx-4 mb-10 mt-5">
+      <h1 className="text-green text-2xl md:text-3xl font-bold">
+        Recent fairs
+      </h1>
 
       <br />
       {fairs?.length === 0 && <p>No fair found.</p>}

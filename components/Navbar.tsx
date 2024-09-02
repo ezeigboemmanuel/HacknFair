@@ -48,12 +48,6 @@ const Navbar = () => {
                   href="/"
                   className={`hover:text-[#4EB645] font-[500] ${pathname == "/" ? "text-[#4EB645]" : ""}`}
                 >
-                  Home
-                </Link>
-                <Link
-                  href="/fairs"
-                  className={`hover:text-[#4EB645] font-[500] ${pathname == "/fairs" ? "text-[#4EB645]" : ""}`}
-                >
                   Fairs
                 </Link>
                 <Link
@@ -83,12 +77,6 @@ const Navbar = () => {
               <Link
                 href="/"
                 className={`hover:text-[#4EB645] font-[500] ${pathname == "/" ? "text-[#4EB645]" : ""}`}
-              >
-                Home
-              </Link>
-              <Link
-                href="/fairs"
-                className={`hover:text-[#4EB645] font-[500] ${pathname == "/fairs" ? "text-[#4EB645]" : ""}`}
               >
                 Fairs
               </Link>
