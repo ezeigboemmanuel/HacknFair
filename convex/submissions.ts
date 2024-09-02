@@ -93,6 +93,40 @@ export const get = query({
   },
 });
 
+export const getSubmissionsByUser = query({
+  args: { userId: v.optional(v.id("users")) },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const submissions = await ctx.db
+      .query("submissions")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .order("desc")
+      .collect();
+
+    const submissionsWithImages = await Promise.all(
+      submissions.map(async (item) => {
+        const creator = await ctx.db.get(item.userId);
+        const imageUrls = await Promise.all(
+          item.storageId.map(async (id) => {
+            const imageUrl = await ctx.storage.getUrl(id);
+            if (!imageUrl) {
+              throw new Error("Image not found");
+            }
+            return imageUrl;
+          })
+        );
+        return { ...item, imageUrls, creator: creator };
+      })
+    );
+
+    return submissionsWithImages;
+  },
+});
+
 export const getSingleSubmission = query({
   args: { id: v.id("submissions") },
   handler: async (ctx, args) => {
@@ -374,7 +408,7 @@ export const makeWinner = mutation({
       throw new Error("Submission not found");
     }
 
-    if(submission.winner){
+    if (submission.winner) {
       return;
     }
 
@@ -384,7 +418,6 @@ export const makeWinner = mutation({
   },
 });
 
-
 export const removeWinner = mutation({
   args: { submissionId: v.id("submissions"), userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -392,8 +425,6 @@ export const removeWinner = mutation({
     if (!submission) {
       throw new Error("Submission not found");
     }
-
-    
 
     await ctx.db.patch(args.submissionId, {
       winner: false,

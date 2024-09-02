@@ -87,7 +87,7 @@ export const get = query({
 });
 
 export const getFairsByUser = query({
-  args: { id: v.id("users") },
+  args: { id: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {

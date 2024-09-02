@@ -1,33 +1,34 @@
 "use client";
 
+import FairCard from "@/components/fair-card";
 import SubmissionCard from "@/components/submission-card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import SyncLoader from "react-spinners/SyncLoader";
+import EmptyImg from "@/assets/empty.svg";
 
 const page = () => {
-  // const user = useQuery(api.users.getCurrentUser);
-  // const submissions = useQuery(api.submissions.get);
-  // const comments = useQuery(api.comments.get);
-  // if (!user) {
-  //   return <div>loading...</div>;
-  // }
+  const user = useQuery(api.users.getCurrentUser);
+  const comments = useQuery(api.comments.get);
 
-  // if (submissions == undefined) {
-  //   return (
-  //     <div className="h-[100vh] w-full flex justify-center items-center">
-  //       <SyncLoader />
-  //     </div>
-  //   );
-  // }
+  const submissions = useQuery(api.submissions.getSubmissionsByUser, {
+    userId: user?._id,
+  });
 
-  // const fairs = useQuery(api.fairs.getFairsByUser, { id: user._id });
-  // console.log(fairs?.map((item) => item._id) as Id<"fairs">[]);
+  const fairs = useQuery(api.fairs.getFairsByUser, { id: user?._id });
+  if (submissions == undefined) {
+    return (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <SyncLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-4 md:mx-10 mt-5">
@@ -47,7 +48,7 @@ const page = () => {
               </h3>
               <div className="flex flex-row justify-between items-center mt-2">
                 <h3 className="text-[#0A0F29] text-[24px] text-center font-[600]">
-                  677
+                  {submissions ? submissions.length : "0"}
                 </h3>
               </div>
             </div>
@@ -57,70 +58,84 @@ const page = () => {
               </h3>
               <div className="flex flex-row justify-between items-center mt-2">
                 <h3 className="text-[#0A0F29] text-[24px] text-center font-[600]">
-                  102
+                  {fairs?.length ? fairs.length : "0"}
                 </h3>
               </div>
             </div>
           </div>
         </TabsContent>
         <TabsContent value="submissions">
-          {/* {submissions?.length > 0 ? (
-            submissions.map((submission) => (
-              <SubmissionCard
-                key={submission._id}
-                title={submission.title}
-                about={submission.about}
-                email={submission.email}
-                imageUrls={submission.imageUrls}
-                link={`${fairs?.map((item) => item._id) as Id<"fairs">[]}/${submission._id}`}
-                userId={submission.userId}
-                creatorName={submission.creator?.name}
-                upvotes={submission.upvotes}
-                downvotes={submission.downvotes}
-                votes={submission.votes}
-                commentLength={
-                  comments
-                    ?.map((comment) =>
-                      submission._id.includes(comment.submissionId)
-                    )
-                    .filter((item) => item === true).length
-                }
-                winner={submission.winner}
-              />
-            ))
-          ) : (
-            <div>No submission yet</div>
-          )} */}
-
-          submissios
+          <div className="w-full">
+            {submissions.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5 gap-x-4">
+                {" "}
+                {submissions.map((submission) => (
+                  <SubmissionCard
+                    key={submission._id}
+                    title={submission.title}
+                    about={submission.about}
+                    email={submission.email}
+                    imageUrls={submission.imageUrls}
+                    link={`${submission.fairId}/${submission._id}`}
+                    userId={submission.userId}
+                    creatorName={submission.creator?.name}
+                    upvotes={submission.upvotes}
+                    downvotes={submission.downvotes}
+                    votes={submission.votes}
+                    commentLength={
+                      comments
+                        ?.map((comment) =>
+                          submission._id.includes(comment.submissionId)
+                        )
+                        .filter((item) => item === true).length
+                    }
+                    winner={submission.winner}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full flex justify-center items-center">
+                <div className="flex flex-col justify-center items-center mt-3">
+                  <Image src={EmptyImg} alt="empty" className="w-40 h-40" />
+                  <p className="text-xl font-semibold mt-3">
+                    You don't have any submission
+                  </p>
+                  <Link href="/fairs">
+                    <p className="text-green">Go to fairs</p>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </TabsContent>
         <TabsContent value="created-fairs">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-5">
-            {/* {fairs?.map((fair) => (
-              <Link key={fair._id} href={`/${fair._id}`}>
-                <div className="mx-auto max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 hover:shadow-lg">
-                  <AspectRatio ratio={16 / 12}>
-                    <img
-                      className="rounded-t-lg object-cover w-full h-full"
-                      src={fair.imageUrl}
-                      alt=""
-                    />
-                  </AspectRatio>
-                  <div className="p-5">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                      {fair.title}
-                    </h5>
-                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                      {fair.subtitle}
-                    </p>
-                    <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                      Deadline: {fair.deadline}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))} */}
-            Dggg
+          {fairs?.length === 0 && (
+            <div className="w-full flex justify-center items-center">
+              <div className="flex flex-col justify-center items-center mt-3">
+                <Image src={EmptyImg} alt="empty" className="w-40 h-40" />
+                <p className="text-xl font-semibold mt-3">
+                  You don't have any fair created
+                </p>
+                <Link href={`/judge/${user?._id}/create-fair`}>
+                  <p className="text-green">Create fair</p>
+                </Link>
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 w-full">
+            {fairs?.map((fair) => (
+              <div key={fair._id}>
+                <FairCard
+                  link={fair._id}
+                  imageUrl={fair.imageUrl}
+                  title={fair.title}
+                  subtitle={fair.subtitle}
+                  deadline={fair.deadline}
+                  userId={user?._id}
+                  judgeId={fair.judgeId}
+                />
+              </div>
+            ))}
           </div>
         </TabsContent>
       </Tabs>
