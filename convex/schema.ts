@@ -46,7 +46,9 @@ export default defineSchema({
         })
       )
     ),
-  }).index("by_title", ["title"]),
+  })
+    .index("by_title", ["title"])
+    .index("by_fairId", ["fairId"]),
   comments: defineTable({
     submissionId: v.id("submissions"),
     userId: v.id("users"),

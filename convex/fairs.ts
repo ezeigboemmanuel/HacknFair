@@ -258,6 +258,17 @@ export const deleteFair = mutation({
       return;
     }
 
+    // Find all submissions associated with this fair
+    const submissions = await ctx.db
+      .query("submissions")
+      .withIndex("by_fairId", (q) => q.eq("fairId", args.id))
+      .collect();
+
+    // Delete each submission
+    for (const submission of submissions) {
+      await ctx.db.delete(submission._id);
+    }
+
     await ctx.db.delete(args.id);
   },
 });
