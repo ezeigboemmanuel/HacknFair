@@ -25,6 +25,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+
+export async function generateMetadata({ params }: { params: { fairId: Id<"fairs"> } }) {
+  const fair = useQuery(api.fairs.getSingleFair, {
+    id: params.fairId,
+  });
+
+  return {
+    metadataBase: new URL("https://hacknfair.vercel.app"),
+    title: fair?.map((item) => item.title)[0],
+    description: fair?.map((item) => item.subtitle)[0],
+    openGraph: {
+      title: fair?.map((item) => item.title)[0],
+      description: fair?.map((item) => item.subtitle)[0],
+      url: `https://hacknfair.vercel.app/${fair?.map((item) => item._id)[0]}`,
+      siteName: "HacknFair",
+      images: [
+        {
+          url: fair?.map((item) => item.imageUrl),
+        },
+      ],
+    },
+  };
+}
+
 const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
   const fair = useQuery(api.fairs.getSingleFair, {
