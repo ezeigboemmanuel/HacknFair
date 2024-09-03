@@ -29,7 +29,7 @@ export async function generateMetadata({
       siteName: "HacknFair",
       images: [
         {
-          url: singleSubmission?.map((item) => item.imageUrls.map((url) => url)[0]),
+          url: singleSubmission?.map((item) => item.imageUrls.map((url) => url)[0])[0],
         },
       ],
     },
