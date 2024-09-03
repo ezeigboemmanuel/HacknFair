@@ -38,36 +38,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { submissionId: Id<"submissions"> };
-}) {
-  const fairParam = useParams();
-  const fair = useQuery(api.fairs.getSingleFair, {
-    id: fairParam.fairId as Id<"fairs">,
-  });
-  const singleSubmission = useQuery(api.submissions.getSingleSubmission, {
-    id: params.submissionId,
-  });
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: { submissionId: Id<"submissions"> };
+// }) {
+//   const fairParam = useParams();
+//   const fair = useQuery(api.fairs.getSingleFair, {
+//     id: fairParam.fairId as Id<"fairs">,
+//   });
+//   const singleSubmission = useQuery(api.submissions.getSingleSubmission, {
+//     id: params.submissionId,
+//   });
 
-  return {
-    metadataBase: new URL("https://hacknfair.vercel.app"),
-    title: singleSubmission?.map((item) => item.title)[0],
-    description: singleSubmission?.map((item) => item.about)[0],
-    openGraph: {
-      title: singleSubmission?.map((item) => item.title)[0],
-      description: singleSubmission?.map((item) => item.about)[0],
-      url: `https://hacknfair.vercel.app/${fair?.map((item) => item._id)[0]}/${singleSubmission?.map((item) => item._id)[0]}`,
-      siteName: "HacknFair",
-      images: [
-        {
-          url: singleSubmission?.map((item) => item.imageUrls)[0],
-        },
-      ],
-    },
-  };
-}
+//   return {
+//     metadataBase: new URL("https://hacknfair.vercel.app"),
+//     title: singleSubmission?.map((item) => item.title)[0],
+//     description: singleSubmission?.map((item) => item.about)[0],
+//     openGraph: {
+//       title: singleSubmission?.map((item) => item.title)[0],
+//       description: singleSubmission?.map((item) => item.about)[0],
+//       url: `https://hacknfair.vercel.app/${fair?.map((item) => item._id)[0]}/${singleSubmission?.map((item) => item._id)[0]}`,
+//       siteName: "HacknFair",
+//       images: [
+//         {
+//           url: singleSubmission?.map((item) => item.imageUrls)[0],
+//         },
+//       ],
+//     },
+//   };
+// }
 
 const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const router = useRouter();
