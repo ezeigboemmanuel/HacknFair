@@ -48,13 +48,15 @@ const Navbar = () => {
                     Dashboard
                   </Link>
                 </SignInButton>
-                <Link
-                  href="/about"
-                  className="hover:text-[#4EB645] font-[500]"
-                  onClick={() => setIsNavOpen(false)}
-                >
-                  About
-                </Link>
+                <SignInButton>
+                  <Link
+                    href="/about"
+                    className="hover:text-[#4EB645] font-[500]"
+                    onClick={() => setIsNavOpen(false)}
+                  >
+                    About
+                  </Link>
+                </SignInButton>
                 <SignInButton>
                   <Button className="bg-[#4EB645] hover:bg-[#60e454] w-full text-base">
                     Sign In
