@@ -50,18 +50,21 @@ const Navbar = () => {
                 <Link
                   href="/"
                   className={`hover:text-[#4EB645] font-[500] ${pathname == "/" ? "text-[#4EB645]" : ""}`}
+                  onClick={() => setIsNavOpen(false)}
                 >
                   Fairs
                 </Link>
                 <Link
                   href="/dashboard"
                   className={`hover:text-[#4EB645] font-[500] ${pathname == "/dashboard" ? "text-[#4EB645]" : ""}`}
+                  onClick={() => setIsNavOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/about"
                   className={`hover:text-[#4EB645] font-[500] ${pathname == "/about" ? "text-[#4EB645]" : ""}`}
+                  onClick={() => setIsNavOpen(false)}
                 >
                   About
                 </Link>
