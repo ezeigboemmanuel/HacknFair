@@ -115,7 +115,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
 
   return (
     <div className="mx-2">
-      <div className="flex justify-between items-center py-5 max-w-4xl mx-auto">
+      <div className="flex flex-col md:flex-row space-y-2 justify-between items-center py-5 max-w-4xl mx-auto">
         <p className="text-xl font-semibold">
           Submitted to:{" "}
           <Link

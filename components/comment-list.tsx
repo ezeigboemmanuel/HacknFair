@@ -62,13 +62,13 @@ const CommentList = ({
     });
   };
   return (
-    <article className="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+    <article className="p-3 md:p-6 text-base bg-white rounded-lg dark:bg-gray-900">
       <footer className="flex justify-between items-center mb-2">
-        <div className="flex items-center">
+        <div className="flex md:items-center flex-col md:flex-row">
           <div className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
             {name}{userId == submissionUserId && <Badge variant="default" className="ml-2">Author</Badge>}
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
             <time dateTime="2022-02-08" title="February 8th, 2022">
               {formatDate(createdAt)}
             </time>
@@ -87,7 +87,7 @@ const CommentList = ({
           </DropdownMenuContent>
         </DropdownMenu>}
       </footer>
-      <p className="text-gray-500 dark:text-gray-400">{comment}</p>
+      <p className="text-gray-600 dark:text-gray-400 text-base">{comment}</p>
     </article>
   );
 };

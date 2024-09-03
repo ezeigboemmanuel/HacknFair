@@ -34,6 +34,7 @@ const Navbar = () => {
                   <Link
                     href="/"
                     className="hover:text-[#4EB645] font-[500]"
+                    onClick={() => setIsNavOpen(false)}
                   >
                     Fairs
                   </Link>
@@ -42,11 +43,16 @@ const Navbar = () => {
                   <Link
                     href="/dashboard"
                     className="hover:text-[#4EB645] font-[500]"
+                    onClick={() => setIsNavOpen(false)}
                   >
                     Dashboard
                   </Link>
                 </SignInButton>
-                <Link href="/about" className="hover:text-[#4EB645] font-[500]">
+                <Link
+                  href="/about"
+                  className="hover:text-[#4EB645] font-[500]"
+                  onClick={() => setIsNavOpen(false)}
+                >
                   About
                 </Link>
                 <SignInButton>
