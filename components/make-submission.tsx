@@ -25,6 +25,12 @@ import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Info } from "lucide-react";
 
 const formSchema = z.object({
   title: z
@@ -56,6 +62,7 @@ const MakeSubmission = () => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [about, setAbout] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const params = useParams();
   const router = useRouter();
 
@@ -91,6 +98,7 @@ const MakeSubmission = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setLoading(true);
     const postUrl = await generateUploadUrl();
 
     if (!imageUrl) {
@@ -176,14 +184,11 @@ const MakeSubmission = () => {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your title"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your title
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
@@ -199,22 +204,27 @@ const MakeSubmission = () => {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your email"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your email
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
         />
 
         <div className="mb-6 mt-4">
-          <label className="block text-gray-800 font-semibold text-sm mb-2">
-            About your project
+          <label className="flex items-center space-x-2 text-gray-800 font-semibold text-sm mb-2">
+            <p>About your project</p>
+            <HoverCard>
+              <HoverCardTrigger>
+                <Info className="stroke-slate-500" />
+              </HoverCardTrigger>
+              <HoverCardContent>
+                Write everything about your project, including images.
+              </HoverCardContent>
+            </HoverCard>
           </label>
           <BlockNoteView
             editor={aboutEditor}
@@ -226,7 +236,8 @@ const MakeSubmission = () => {
         <Button
           type="submit"
           variant="default"
-          className="mt-6 w-full py-3 font-semibold rounded-lg"
+          disabled={loading}
+          className="mt-3 w-full py-3 font-semibold rounded-lg bg-[#4eb645] hover:bg-[#33a828]"
         >
           Submit your project
         </Button>

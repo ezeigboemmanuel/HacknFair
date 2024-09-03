@@ -69,6 +69,8 @@ const EditSubmission = ({
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [about, setAbout] = useState<string>(initialAbout);
+  const [loading, setLoading] = useState(false);
+
   const params = useParams();
   const router = useRouter();
 
@@ -114,6 +116,7 @@ const EditSubmission = ({
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setLoading(true);
     const postUrl = await generateUploadUrl();
 
     if (selectedImages.length === 0) {
@@ -183,7 +186,7 @@ const EditSubmission = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto"
+        className="bg-white p-6 rounded-lg max-w-2xl mx-auto"
       >
         <div className="mb-6">
           <p>You are submitting to:</p>
@@ -218,7 +221,7 @@ const EditSubmission = ({
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your title"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
@@ -241,7 +244,7 @@ const EditSubmission = ({
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your email"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
@@ -269,7 +272,8 @@ const EditSubmission = ({
         <Button
           type="submit"
           variant="default"
-          className="mt-6 w-full py-3 font-semibold rounded-lg"
+          disabled={loading}
+          className="mt-3 w-full py-3 font-semibold rounded-lg bg-[#4eb645] hover:bg-[#33a828]"
         >
           Update your project
         </Button>

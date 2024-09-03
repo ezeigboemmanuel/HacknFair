@@ -14,6 +14,16 @@ import SyncLoader from "react-spinners/SyncLoader";
 import Image from "next/image";
 import EmptyImg from "@/assets/empty.svg";
 import { SquarePen, Trash } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
@@ -47,7 +57,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   return (
     <div className="max-w-5xl mx-auto px-4">
       {user?._id == fair?.map((item) => item.judgeId) ? (
-        <div className="flex space-x-3 mt-5 justify-end">
+        <div className="flex space-x-3 pt-5 justify-end">
           <div
             onClick={() =>
               router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)
@@ -55,9 +65,32 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
           >
             <SquarePen className="stroke-[#4eb645] hover:stroke-[#33a828] cursor-pointer" />
           </div>
-          <div onClick={onDelete}>
-            <Trash className="stroke-red-500 cursor-pointer" />
-          </div>
+
+          <Dialog>
+            <DialogTrigger>
+              <Trash className="stroke-red-500 cursor-pointer" />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your fair and your fair submissions from our database.
+                </DialogDescription>
+              </DialogHeader>
+
+              <DialogFooter>
+                <Button onClick={onDelete} variant="destructive">
+                  Delete
+                </Button>
+                <DialogClose asChild>
+                  <Button variant="outline">
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       ) : (
         <div className="flex space-x-3 mt-5 md:justify-end">

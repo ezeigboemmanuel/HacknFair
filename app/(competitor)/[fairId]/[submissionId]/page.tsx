@@ -27,6 +27,16 @@ import { useState } from "react";
 import Submissions from "@/components/submissions";
 import MarkdownDisplay from "@/components/markdown-display";
 import SyncLoader from "react-spinners/SyncLoader";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   const router = useRouter();
@@ -105,7 +115,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
 
   return (
     <div className="mx-2">
-      <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
+      <div className="flex justify-between items-center py-5 max-w-4xl mx-auto">
         <p className="text-xl font-semibold">
           Submitted to:{" "}
           <Link
@@ -140,12 +150,33 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               </p>
               <p>
                 Mistake?{" "}
-                <span
-                  className="text-[#4eb645] underline cursor-pointer"
-                  onClick={handleRemoveWinner}
-                >
-                  remove winner
-                </span>
+                <Dialog>
+                  <DialogTrigger>
+                    <span className="text-red-500 underline cursor-pointer">
+                      remove winner
+                    </span>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This will remove this user as the winner of your fair.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <DialogFooter>
+                      <Button
+                        onClick={handleRemoveWinner}
+                        variant="destructive"
+                      >
+                        Remove
+                      </Button>
+                      <DialogClose asChild>
+                        <Button variant="outline">Cancel</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </p>
             </div>
           )}
@@ -170,9 +201,29 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               >
                 <SquarePen className="stroke-[#4eb645] hover:stroke-[#33a828] cursor-pointer" />
               </div>
-              <div onClick={onDelete}>
-                <Trash className="stroke-red-500 cursor-pointer" />
-              </div>
+              <Dialog>
+                <DialogTrigger>
+                  <Trash className="stroke-red-500 cursor-pointer" />
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your submission from our database.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogFooter>
+                    <Button onClick={onDelete} variant="destructive">
+                      Delete
+                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancel</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           )}
       </div>
