@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "HacknFair",
     images: [
       {
-        url: "https://zgboportfolio.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FAimg5.ce352ceb.png&w=828&q=75",
+        url: "https://images.pexels.com/photos/305565/pexels-photo-305565.jpeg",
       },
     ],
   },
