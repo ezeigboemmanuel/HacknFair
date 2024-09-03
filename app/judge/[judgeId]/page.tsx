@@ -6,11 +6,17 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import SyncLoader from "react-spinners/SyncLoader";
 
 const Fairs = ({ params }: { params: { judgeId: Id<"users"> } }) => {
   const fairs = useQuery(api.fairs.getFairsByUser, { id: params.judgeId });
   const user = useQuery(api.users.getCurrentUser);
+
+  const router = useRouter();
+  setTimeout(() => {
+    router.push(`/dashboard`);
+  }, 4000);
 
   if (fairs == undefined) {
     return (

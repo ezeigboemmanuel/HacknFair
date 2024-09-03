@@ -101,12 +101,13 @@ const Comments = ({ submissionId, submissionUserId }: CommentsProps) => {
               ></textarea>
             </div>
             {!edit ? (
-              <Button onClick={handleComments} type="submit" variant="default">
+              <Button onClick={handleComments} className="bg-[#4eb645] hover:bg-[#33a828]" type="submit" variant="default">
                 Post comment
               </Button>
             ) : (
               <Button
                 onClick={() => handleEditComment(id)}
+                className="bg-[#4eb645] hover:bg-[#33a828]"
                 type="submit"
                 variant="default"
               >

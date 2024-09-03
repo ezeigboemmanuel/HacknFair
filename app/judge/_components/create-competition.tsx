@@ -55,6 +55,7 @@ const CreateCompetition = () => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [deadline, setDeadline] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -110,6 +111,7 @@ const CreateCompetition = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setLoading(true);
     const postUrl = await generateUploadUrl();
 
     if (!imageUrl) {
@@ -146,25 +148,24 @@ const CreateCompetition = () => {
         })
           .then(() => {
             toast.success("Fair created successfully!");
-            router.push(`/judge/${user?._id}`);
+            router.push(`/dashboard`);
           })
           .catch((error) => {
             console.log(error);
             toast.error("Create fair error");
           });
-          console.log("in promise")
+        console.log("in promise");
       })
-      
     );
-    console.log("clicked")
+    console.log("clicked");
   };
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto"
+        className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-4"
       >
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block text-gray-800 font-semibold">
             Banner Image
           </label>
@@ -176,7 +177,7 @@ const CreateCompetition = () => {
             />
           )}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <Input
             id="image"
             type="file"
@@ -196,14 +197,11 @@ const CreateCompetition = () => {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your title"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your title
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
@@ -219,14 +217,11 @@ const CreateCompetition = () => {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your subtitle"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your subtitle
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
@@ -291,7 +286,8 @@ const CreateCompetition = () => {
         <Button
           type="submit"
           variant="default"
-          className="mt-6 w-full py-3 font-semibold rounded-lg"
+          disabled={loading}
+          className="mt-6 w-full py-3 font-semibold rounded-lg bg-[#4eb645] hover:bg-[#33a828]"
         >
           Create Fair
         </Button>

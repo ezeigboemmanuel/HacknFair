@@ -8,9 +8,9 @@ import { useEffect } from "react";
 const JudgePage = () => {
   const user = useQuery(api.users.getCurrentUser);
   const router = useRouter();
-setTimeout(() => {
-  router.push(`/judge/${user?._id}`);
-}, 4000)
+  setTimeout(() => {
+    router.push(`/dashboard`);
+  }, 4000);
   return <div></div>;
 };
 

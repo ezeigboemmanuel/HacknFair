@@ -86,6 +86,7 @@ const EditCompetition = ({
   const [req, setReq] = useState<string>(initialRequirements);
   const [price, setPrice] = useState<string>(initialPrices);
   const [judcri, setJudcri] = useState<string>(initialJudgingCriteria);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -149,6 +150,7 @@ const EditCompetition = ({
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setLoading(true)
     const postUrl = await generateUploadUrl();
 
     if (selectedImages.length === 0) {
@@ -167,7 +169,7 @@ const EditCompetition = ({
       })
         .then(() => {
           toast.success("Fair updated successfully!");
-          router.push(`/judge/${user?._id}`);
+          router.push(`/${fairId}`);
         })
         .catch((error) => {
           console.log(error);
@@ -205,7 +207,7 @@ const EditCompetition = ({
         })
           .then(() => {
             toast.success("Fair updated successfully!");
-            router.push(`/judge/${user?._id}`);
+            router.push(`/${fairId}`);
           })
           .catch((error) => {
             console.log(error);
@@ -218,9 +220,9 @@ const EditCompetition = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto"
+        className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-4"
       >
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block text-gray-800 font-semibold">
             Banner Image
           </label>
@@ -232,7 +234,7 @@ const EditCompetition = ({
             />
           )}
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <Input
             id="image"
             type="file"
@@ -252,14 +254,11 @@ const EditCompetition = ({
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your title"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your title
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
@@ -275,14 +274,11 @@ const EditCompetition = ({
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="I will do something amazing"
+                  placeholder="Enter your subtitle"
                   {...field}
                   className="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring focus:border-blue-500"
                 />
               </FormControl>
-              <FormDescription className="text-gray-500 mt-1">
-                Enter your subtitle
-              </FormDescription>
               <FormMessage className="text-red-500 mt-1" />
             </FormItem>
           )}
@@ -346,7 +342,8 @@ const EditCompetition = ({
         <Button
           type="submit"
           variant="default"
-          className="mt-6 w-full py-3 font-semibold rounded-lg"
+          disabled={loading}
+          className="mt-6 w-full py-3 font-semibold rounded-lg bg-[#4eb645] hover:bg-[#33a828]"
         >
           Edit Fair
         </Button>

@@ -141,7 +141,7 @@ const MakeSubmission = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto"
+        className="bg-white p-6 rounded-lg max-w-2xl mx-auto mt-4"
       >
         <div className="mb-6">
           <p>You are submitting to:</p>

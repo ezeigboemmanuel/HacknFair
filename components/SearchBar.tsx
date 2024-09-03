@@ -44,7 +44,7 @@ const SearchBar = () => {
     router.push(url);
   };
   return (
-    <div className="w-full mx-auto pl-8">
+    <div className="w-full mx-auto pl-3 md:pl-8">
       <form className="w-full" onSubmit={handleSubmit}>
         <div className="w-full flex justify-center items-center space-x-2">
           <div className="relative w-full">
@@ -68,7 +68,7 @@ const SearchBar = () => {
             <input
               type="search"
               id="default-search"
-              className="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              className="block w-full px-3 py-2 md:py-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Search Fairs, Hackathons..."
               onChange={handleChange}
               value={value}
@@ -77,7 +77,7 @@ const SearchBar = () => {
           </div>
           <button
             type="submit"
-            className="text-white bg-green hover:bg-[#48dd3a] font-medium rounded-lg text-sm px-4 py-3"
+            className="text-white bg-green hover:bg-[#48dd3a] font-medium rounded-lg text-sm px-3 md:px-4  py-2 md:py-3"
           >
             Search
           </button>

@@ -51,7 +51,7 @@ const SubmissionCard = ({
         {winner && <Award className="absolute top-2 left-0 fill-yellow-400 stroke-black stroke-1 w-10 h-10" />}
 
         {userId === currentUser?._id && (
-          <div className="absolute top-0 right-0 bg-black text-white p-1 text-sm rounded-md">
+          <div className="absolute z-10 top-0 right-0 bg-[#4eb645] text-white p-1 text-sm rounded-tr-md">
             Owner
           </div>
         )}
@@ -71,13 +71,13 @@ const SubmissionCard = ({
           <div className="flex space-x-2 text-gray-600">
             <div className="flex">
               <ArrowBigUp
-                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
+                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "upvote" ? "fill-[#4eb645] stroke-[#4eb645]" : ""}`}
               />
               <p>{upvotes ? upvotes : 0}</p>
             </div>
             <div className="flex">
               <ArrowBigDown
-                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
+                className={`${votes?.find((vote) => vote.userId === currentUser._id)?.voteType == "downvote" ? "fill-[#4eb645] stroke-[#4eb645]" : ""}`}
               />
               <p>{downvotes ? downvotes : "0"}</p>
             </div>

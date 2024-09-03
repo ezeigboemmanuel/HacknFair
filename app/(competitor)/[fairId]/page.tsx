@@ -11,6 +11,9 @@ import AboutFair from "@/components/about-fair";
 import Submissions from "@/components/submissions";
 import toast from "react-hot-toast";
 import SyncLoader from "react-spinners/SyncLoader";
+import Image from "next/image";
+import EmptyImg from "@/assets/empty.svg";
+import { SquarePen, Trash } from "lucide-react";
 
 const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
   const user = useQuery(api.users.getCurrentUser);
@@ -45,29 +48,32 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
     <div className="max-w-5xl mx-auto px-4">
       {user?._id == fair?.map((item) => item.judgeId) ? (
         <div className="flex space-x-3 mt-5 justify-end">
-          <Button
+          <div
             onClick={() =>
               router.push(`/judge/${user?._id}/edit-fair/${params.fairId}`)
             }
           >
-            Edit
-          </Button>
-          <Button onClick={onDelete} variant="destructive">
-            Delete
-          </Button>
+            <SquarePen className="stroke-[#4eb645] hover:stroke-[#33a828] cursor-pointer" />
+          </div>
+          <div onClick={onDelete}>
+            <Trash className="stroke-red-500 cursor-pointer" />
+          </div>
         </div>
       ) : (
-        <div className="flex space-x-3 mt-5 justify-end">
+        <div className="flex space-x-3 mt-5 md:justify-end">
           {submissions
             ?.map((submission) => submission.userId)
             .includes(user!._id) ? (
-            <Button disabled>Already Submitted</Button>
+            <Button disabled className="bg-[#4eb645] mb-2">
+              Already Submitted
+            </Button>
           ) : (
             <Button
               disabled={submissions
                 ?.map((submission) => submission.userId)
                 .includes(user!._id)}
               onClick={() => router.push(`/${params.fairId}/submit`)}
+              className="bg-[#4eb645] hover:bg-[#33a828] mb-2"
             >
               Make submission
             </Button>
@@ -104,7 +110,12 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
               fairId={fair?.map((item) => item._id) as Id<"fairs">[]}
             />
           ) : (
-            <div>No submission yet</div>
+            <div className="w-full flex justify-center items-center">
+              <div className="flex flex-col justify-center items-center mt-3">
+                <Image src={EmptyImg} alt="empty" className="w-40 h-40" />
+                <p className="text-xl font-semibold mt-3">No submissions yet</p>
+              </div>
+            </div>
           )}
         </TabsContent>
       </Tabs>

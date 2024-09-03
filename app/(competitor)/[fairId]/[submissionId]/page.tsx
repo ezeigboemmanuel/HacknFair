@@ -13,7 +13,13 @@ import {
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowBigDown, ArrowBigUp, MessageSquare } from "lucide-react";
+import {
+  ArrowBigDown,
+  ArrowBigUp,
+  MessageSquare,
+  SquarePen,
+  Trash,
+} from "lucide-react";
 import Comments from "@/components/comments";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -100,7 +106,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
   return (
     <div className="mx-2">
       <div className="flex justify-between items-center my-5 max-w-4xl mx-auto">
-        <p className="text-xl text-center mx-2  font-semibold">
+        <p className="text-xl font-semibold">
           Submitted to:{" "}
           <Link
             href={`/${fair?.map((item) => item._id)[0]}`}
@@ -112,7 +118,12 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
 
         {fair?.map((item) => item.judgeId).includes(user?._id) &&
           !singleSubmission?.map((item) => item.winner)[0] && (
-            <Button onClick={handleMakeWinner}>Make Winner</Button>
+            <Button
+              onClick={handleMakeWinner}
+              className="bg-[#4eb645] hover:bg-[#33a828]"
+            >
+              Make Winner
+            </Button>
           )}
         {fair?.map((item) => item.judgeId).includes(user?._id) &&
           singleSubmission?.map((item) => item.winner)[0] && (
@@ -121,7 +132,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
                 Contact the winner:{" "}
                 <Link
                   href={`mailto:${singleSubmission?.map((item) => item.email)}`}
-                  className="text-blue-500"
+                  className="text-[#4eb645]"
                   target="_blank"
                 >
                   {singleSubmission?.map((item) => item.email)}
@@ -130,7 +141,7 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
               <p>
                 Mistake?{" "}
                 <span
-                  className="text-blue-500 underline cursor-pointer"
+                  className="text-[#4eb645] underline cursor-pointer"
                   onClick={handleRemoveWinner}
                 >
                   remove winner
@@ -149,19 +160,19 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
           ?.map((submission) => submission.userId)
           .includes(user._id) &&
           !singleSubmission?.map((item) => item.winner)[0] && (
-            <div className="flex space-x-3 justify-end">
-              <Button
+            <div className="flex space-x-3 justify-end items-center">
+              <div
                 onClick={() => {
                   router.push(
                     `/${fair?.map((item) => item._id)}/edit-submission/${singleSubmission?.map((item) => item._id)}`
                   );
                 }}
               >
-                Edit
-              </Button>
-              <Button variant="destructive" onClick={onDelete}>
-                Delete
-              </Button>
+                <SquarePen className="stroke-[#4eb645] hover:stroke-[#33a828] cursor-pointer" />
+              </div>
+              <div onClick={onDelete}>
+                <Trash className="stroke-red-500 cursor-pointer" />
+              </div>
             </div>
           )}
       </div>
@@ -188,14 +199,14 @@ const page = ({ params }: { params: { submissionId: Id<"submissions"> } }) => {
             <div className="flex space-x-2 text-gray-600 my-4">
               <div className="flex">
                 <ArrowBigUp
-                  className={`cursor-pointer hover:stroke-black ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "upvote" ? "fill-black stroke-black" : ""}`}
+                  className={`cursor-pointer hover:stroke-[#4eb645] ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "upvote" ? "fill-[#4eb645] stroke-[#4eb645]" : ""}`}
                   onClick={handleUpvote}
                 />
                 <p>{item.upvotes ? item.upvotes : "0"}</p>
               </div>
               <div className="flex">
                 <ArrowBigDown
-                  className={`cursor-pointer hover:stroke-black ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "downvote" ? "fill-black stroke-black" : ""}`}
+                  className={`cursor-pointer hover:stroke-[#4eb645] ${item.votes?.find((vote) => vote.userId === user._id)?.voteType == "downvote" ? "fill-[#4eb645] stroke-[#4eb645]" : ""}`}
                   onClick={handleDownvote}
                 />
                 <p>{item.downvotes ? item.downvotes : "0"}</p>
