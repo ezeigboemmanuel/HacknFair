@@ -8,22 +8,25 @@ import { marked } from "marked";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
+import { useSearchParams } from 'next/navigation'
 
 interface HomeProps {
   searchParams: {
     search?: string;
   };
 }
-export default function Home({ searchParams }: HomeProps) {
+export default function Home() {
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search')
   const store = useMutation(api.users.storeUser);
   const user = useQuery(api.users.getCurrentUser);
   const fairs = useQuery(api.fairs.get) || [];
-  const searchQuery = searchParams?.search || "";
+  const searchQuery = search || "";
   const searchResult = useQuery(api.fairs.getSearch, {
     search: searchQuery,
   });
 
-  console.log("search", searchParams)
+  console.log("search", search)
 
   useEffect(() => {
     const storeUser = async () => {
