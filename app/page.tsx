@@ -17,8 +17,6 @@ export default function Home() {
   const store = useMutation(api.users.storeUser);
   const user = useQuery(api.users.getCurrentUser);
   const fairs = useQuery(api.fairs.get, { search: searchQuery });
-
-  console.log("search: ", searchQuery)
   useEffect(() => {
     const storeUser = async () => {
       await store({});
