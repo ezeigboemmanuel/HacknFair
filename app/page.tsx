@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { marked } from "marked";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
+import EmptyImg from "@/assets/empty.svg";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -35,12 +37,24 @@ export default function Home() {
 
   return (
     <main className="mx-4 mb-10 mt-5">
-      <h1 className="text-green text-2xl md:text-3xl font-bold">
-        Recent fairs
-      </h1>
+      {fairs?.length !== 0 && (
+        <h1 className="text-green text-2xl md:text-3xl font-bold">
+          Recent fairs
+        </h1>
+      )}
 
       <br />
-      {fairs?.length === 0 && <p>No fair found.</p>}
+      {fairs?.length === 0 && (
+        <div className="w-full flex justify-center items-center">
+          <div className="flex flex-col justify-center items-center mt-3">
+            <Image src={EmptyImg} alt="empty" className="w-40 h-40" />
+            <p className="text-xl font-semibold mt-3">No fair found</p>
+            <Link href="/">
+              <p className="text-green">Go to home</p>
+            </Link>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 w-full">
         {fairs?.map((fair) => (
           <div key={fair._id}>
