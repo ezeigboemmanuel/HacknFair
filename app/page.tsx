@@ -6,28 +6,19 @@ import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { marked } from "marked";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import SyncLoader from "react-spinners/SyncLoader";
-import { useSearchParams } from 'next/navigation'
 
-interface HomeProps {
-  searchParams: {
-    search?: string;
-  };
-}
 export default function Home() {
-  const searchParams = useSearchParams()
-  const search = searchParams.get('search')
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search");
+  const searchQuery = search || "";
   const store = useMutation(api.users.storeUser);
   const user = useQuery(api.users.getCurrentUser);
-  const fairs = useQuery(api.fairs.get) || [];
-  const searchQuery = search || "";
-  const searchResult = useQuery(api.fairs.getSearch, {
-    search: searchQuery,
-  });
+  const fairs = useQuery(api.fairs.get, { search: searchQuery });
 
-  console.log("search", search)
-
+  console.log("search: ", searchQuery)
   useEffect(() => {
     const storeUser = async () => {
       await store({});
@@ -51,35 +42,21 @@ export default function Home() {
       </h1>
 
       <br />
-      {searchResult?.length === 0 && <p>No fair found.</p>}
+      {fairs?.length === 0 && <p>No fair found.</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-5 w-full">
-        {searchParams
-          ? searchResult?.map((fair) => (
-              <div key={fair._id}>
-                <FairCard
-                  link={fair._id}
-                  imageUrl={fair.imageUrl}
-                  title={fair.title}
-                  subtitle={fair.subtitle}
-                  deadline={fair.deadline}
-                  userId={user?._id}
-                  judgeId={fair.judgeId}
-                />
-              </div>
-            ))
-          : fairs?.map((fair) => (
-              <div key={fair._id}>
-                <FairCard
-                  link={fair._id}
-                  imageUrl={fair.imageUrl}
-                  title={fair.title}
-                  subtitle={fair.subtitle}
-                  deadline={fair.deadline}
-                  userId={user?._id}
-                  judgeId={fair.judgeId}
-                />
-              </div>
-            ))}
+        {fairs?.map((fair) => (
+          <div key={fair._id}>
+            <FairCard
+              link={fair._id}
+              imageUrl={fair.imageUrl}
+              title={fair.title}
+              subtitle={fair.subtitle}
+              deadline={fair.deadline}
+              userId={user?._id}
+              judgeId={fair.judgeId}
+            />
+          </div>
+        ))}
       </div>
     </main>
   );

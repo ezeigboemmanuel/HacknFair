@@ -46,40 +46,9 @@ export const storeFair = mutation({
 });
 
 export const get = query({
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthorized");
-    }
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
-      .unique();
-
-    if (user === null) {
-      return;
-    }
-
-    const fairs = await ctx.db.query("fairs").order("desc").collect();
-
-    const fairsWithImages = await Promise.all(
-      fairs.map(async (fair) => {
-        const imageUrl = await ctx.storage.getUrl(fair.storageId);
-        if (!imageUrl) {
-          throw new Error("Image not found");
-        }
-        return { ...fair, imageUrl: imageUrl };
-      })
-    );
-    return fairsWithImages;
-  },
-});
-
-export const getSearch = query({
-  args: { search: v.string() },
+  args: { search: v.optional(v.string()) },
   handler: async (ctx, args) => {
+    const title = args.search as string;
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Unauthorized");
@@ -94,8 +63,6 @@ export const getSearch = query({
     if (user === null) {
       return;
     }
-    const title = args.search as string;
-
     let fairs = [];
 
     if (title) {
