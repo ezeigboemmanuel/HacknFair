@@ -80,7 +80,6 @@ export const get = query({
 export const getSearch = query({
   args: { search: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const title = args.search as string;
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Unauthorized");
@@ -95,6 +94,8 @@ export const getSearch = query({
     if (user === null) {
       return;
     }
+    const title = args.search as string;
+
     let fairs = [];
 
     if (title) {
