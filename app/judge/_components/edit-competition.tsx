@@ -319,7 +319,7 @@ const EditCompetition = ({
 
         <div className="mb-6 mt-4">
           <label className="block text-gray-800 font-semibold text-sm mb-2">
-            Prices
+            Prizes
           </label>
           <BlockNoteView
             editor={priceEditor}

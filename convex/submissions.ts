@@ -287,6 +287,16 @@ export const deleteSubmission = mutation({
       return;
     }
 
+        // Find all comments associated with this submission
+        const comments = await ctx.db
+        .query("comments")
+        .withIndex("by_submissionId", (q) => q.eq("submissionId", args.id))
+        .collect();
+  
+      // Delete each submission
+      for (const comment of comments) {
+        await ctx.db.delete(comment._id);
+      }
     await ctx.db.delete(args.id);
   },
 });
