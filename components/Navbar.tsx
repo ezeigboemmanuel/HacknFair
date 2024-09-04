@@ -27,8 +27,8 @@ const Navbar = () => {
           <SearchBar />
         </div>
         <nav>
-          <section className="flex lg:hidden">
-            <div className="pr-2 pl-2">
+          <section className="flex lg:hidden items-center">
+            <div className="pr-2 pl-2 mt-2 items-center">
               <UserButton />
             </div>
 
