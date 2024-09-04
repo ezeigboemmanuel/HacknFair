@@ -11,16 +11,16 @@ import SyncLoader from "react-spinners/SyncLoader";
 
 interface HomeProps {
   searchParams: {
-    search: string;
+    search?: string;
   };
 }
 export default function Home({ searchParams }: HomeProps) {
   const store = useMutation(api.users.storeUser);
   const user = useQuery(api.users.getCurrentUser);
   const fairs = useQuery(api.fairs.get) || [];
-  const [searchText, setSearchText] = useState("");
+  const searchQuery = searchParams?.search || "";
   const searchResult = useQuery(api.fairs.getSearch, {
-    search: searchParams.search,
+    search: searchQuery,
   });
 
   console.log("search", searchParams)

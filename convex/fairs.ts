@@ -78,7 +78,7 @@ export const get = query({
 });
 
 export const getSearch = query({
-  args: { search: v.optional(v.string()) },
+  args: { search: v.string() },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
