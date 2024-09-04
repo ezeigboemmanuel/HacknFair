@@ -69,7 +69,7 @@ const Navbar = () => {
                   About
                 </Link>
 
-                <Link href={`/judge/${user?._id}/create-fair`}>
+                <Link href={`/judge/${user?._id}/create-fair`} onClick={() => setIsNavOpen(false)}>
                   <Button className="bg-[#4EB645] hover:bg-[#60e454] w-full text-base">
                     Create a Fair
                   </Button>
