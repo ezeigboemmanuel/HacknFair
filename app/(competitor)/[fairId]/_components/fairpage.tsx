@@ -68,6 +68,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
             <DialogTrigger>
               <Trash className="stroke-red-500 cursor-pointer" />
             </DialogTrigger>
+            <div className="mx-2">
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -86,6 +87,7 @@ const FairPage = ({ params }: { params: { fairId: Id<"fairs"> } }) => {
                 </DialogClose>
               </DialogFooter>
             </DialogContent>
+            </div>
           </Dialog>
         </div>
       ) : (
