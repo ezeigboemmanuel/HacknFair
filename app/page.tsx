@@ -23,6 +23,8 @@ export default function Home({ searchParams }: HomeProps) {
     search: searchParams.search,
   });
 
+  console.log("search", searchParams)
+
   useEffect(() => {
     const storeUser = async () => {
       await store({});
