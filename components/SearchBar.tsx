@@ -3,6 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import queryString from "query-string";
+import { X } from "lucide-react";
 
 const SearchBar = () => {
   const router = useRouter();
@@ -81,7 +82,20 @@ const SearchBar = () => {
           >
             Search
           </button>
-          {search && <p onClick={clearSearch} className="cursor-pointer hover:underline text-red-500 text-sm min-w-[100px]">Clear search</p>}
+          {search && (
+            <div>
+              <p
+                onClick={clearSearch}
+                className="hidden md:inline-block cursor-pointer hover:underline text-red-500 text-sm text-nowrap"
+              >
+                Clear search
+              </p>
+              <X
+                onClick={clearSearch}
+                className="md:hidden stroke-red-500 w-6 h-6"
+              />
+            </div>
+          )}
         </div>
       </form>
     </div>
