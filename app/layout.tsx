@@ -38,7 +38,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <div className="flex flex-col min-h-screen">
             <Navbar />
-            <div className="mt-28 flex-grow">{children}</div>
+            <div className="mt-28 flex-grow max-w-[1400px] mx-auto">{children}</div>
             <Footer />
           </div>
         </ConvexClientProvider>
