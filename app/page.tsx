@@ -36,7 +36,7 @@ export default function Home() {
   }
 
   return (
-    <main className="mx-4 mb-10 mt-5">
+    <main className="mx-4 mb-10 mt-5 max-w-[1200px] lg:mx-auto">
       {fairs?.length !== 0 && (
         <h1 className="text-green text-2xl md:text-3xl font-bold">
           Recent fairs

@@ -2,7 +2,7 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="mx-4 md:mx-10 mt-5 mb-10">
+    <div className="mx-4 md:mx-10 mt-5 mb-10 max-w-[1200px] lg:mx-auto">
       <div>
         <h2 className="text-green text-2xl md:text-3xl font-bold">
           About HacknFair
